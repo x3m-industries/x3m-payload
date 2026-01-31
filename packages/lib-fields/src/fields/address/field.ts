@@ -9,7 +9,7 @@ import {
   countryField,
 } from '../country/field.js';
 
-export type AddressFieldOverrides = Partial<Omit<NamedGroupField, 'type'>>;
+export type AddressFieldOverridesInternal = Partial<Omit<NamedGroupField, 'type'>>;
 export type AddressLine1Overrides = Partial<Omit<TextField, 'type'>>;
 export type AddressLine2Overrides = Partial<Omit<TextField, 'type'>>;
 export type AddressCityOverrides = Partial<Omit<TextField, 'type'>>;
@@ -17,23 +17,34 @@ export type AddressStateOverrides = Partial<Omit<TextField, 'type'>>;
 export type AddressZipOverrides = Partial<Omit<TextField, 'type'>>;
 
 /**
+ * All possible overrides for the address field group and its subfields.
+ */
+export interface AddressFieldOverrides {
+  address?: AddressFieldOverridesInternal;
+  city?: AddressCityOverrides;
+  country?: CountryFieldOverrides;
+  line1?: AddressLine1Overrides;
+  line2?: AddressLine2Overrides;
+  state?: AddressStateOverrides;
+  zip?: AddressZipOverrides;
+}
+
+/**
+ * Configuration for the address field behavior.
+ */
+export interface AddressFieldConfig {
+  /** Configuration for subfields (e.g., country dropdown) */
+  country?: CountryFieldConfig;
+}
+
+/**
  * Props for the address field.
  */
 export interface AddressFieldProps {
-  /** Configuration for subfields (e.g., country dropdown) */
-  config?: {
-    country?: CountryFieldConfig;
-  };
+  /** Configuration for the field behavior */
+  config?: AddressFieldConfig;
   /** Overrides for the underlying Payload fields */
-  overrides?: {
-    address?: AddressFieldOverrides;
-    city?: AddressCityOverrides;
-    country?: CountryFieldOverrides;
-    line1?: AddressLine1Overrides;
-    line2?: AddressLine2Overrides;
-    state?: AddressStateOverrides;
-    zip?: AddressZipOverrides;
-  };
+  overrides?: AddressFieldOverrides;
 }
 
 /**
@@ -44,7 +55,10 @@ export interface AddressFieldProps {
  * @returns An array containing the configured Payload field group
  */
 export function addressField({ config = {}, overrides = {} }: AddressFieldProps = {}): Field[] {
-  const addressGroupField: NamedGroupField = deepMerge<NamedGroupField, AddressFieldOverrides>(
+  const addressGroupField: NamedGroupField = deepMerge<
+    NamedGroupField,
+    AddressFieldOverridesInternal
+  >(
     {
       name: 'address',
       type: 'group',

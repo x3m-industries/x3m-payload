@@ -10,7 +10,6 @@ export type URLType =
   | 'instagramAccount'
   | 'linkedin'
   | 'linkedinAccount'
-  | 'twitterAccount'
   | 'url'
   | 'website'
   | 'xAccount';
@@ -47,20 +46,14 @@ export const URLTypeDefaults: Record<URLType, URLFieldDefaults> = {
     name: 'linkedin',
     isUrl: true,
     label: 'LinkedIn URL',
-    placeholder: 'https://www.linkedin.com/in/username',
-    regex: /^https?:\/\/(www\.)?linkedin\.com\/in\/.+/i,
+    placeholder: 'https://www.linkedin.com/in/username or /company/name',
+    regex: /^https?:\/\/(www\.)?linkedin\.com\/(in|company|school)\/.+/i,
   },
   linkedinAccount: {
     name: 'linkedinAccount',
     label: 'LinkedIn Account',
     placeholder: 'username',
     regex: /^[a-z0-9-]+$/i,
-  },
-  twitterAccount: {
-    name: 'twitterAccount',
-    label: 'Twitter Account',
-    placeholder: '@username',
-    regex: /^@?\w{1,15}$/,
   },
   url: {
     name: 'url',
