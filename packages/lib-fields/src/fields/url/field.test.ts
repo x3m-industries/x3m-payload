@@ -47,8 +47,16 @@ describe('urlField', () => {
     expect(typeof (await field.validate('invalid', mockArgs))).toBe('string');
   });
 
+  it('should validate instagramAccount as a URL', async () => {
+    const fields = urlField({ config: { type: 'instagramAccount' } });
+    const field = fields[0] as any;
+
+    expect(await field.validate('https://www.instagram.com/user.name', mockArgs)).toBe(true);
+    expect(typeof (await field.validate('just-the-handle', mockArgs))).toBe('string');
+  });
+
   it('should validate LinkedIn URLs correctly including company and school', async () => {
-    const fields = urlField({ config: { type: 'linkedin' } });
+    const fields = urlField({ config: { type: 'linkedinAccount' } });
     const field = fields[0] as any;
 
     expect(await field.validate('https://www.linkedin.com/in/user', mockArgs)).toBe(true);
@@ -57,6 +65,15 @@ describe('urlField', () => {
     expect(typeof (await field.validate('https://www.linkedin.com/feed/', mockArgs))).toBe(
       'string'
     );
+  });
+
+  it('should validate xAccount as a URL', async () => {
+    const fields = urlField({ config: { type: 'xAccount' } });
+    const field = fields[0] as any;
+
+    expect(await field.validate('https://x.com/username', mockArgs)).toBe(true);
+    expect(await field.validate('https://twitter.com/username', mockArgs)).toBe(true);
+    expect(typeof (await field.validate('invalid-format', mockArgs))).toBe('string');
   });
 
   it('should enforce https if enabled', async () => {
@@ -82,14 +99,6 @@ describe('urlField', () => {
     const hook = field.hooks.beforeValidate[0];
 
     expect(hook({ value: 'google.com' })).toBe('http://google.com');
-  });
-
-  it('should validate account handles correctly', async () => {
-    const fields = urlField({ config: { type: 'instagramAccount' } });
-    const field = fields[0] as any;
-
-    expect(await field.validate('my_user.name', mockArgs)).toBe(true);
-    expect(typeof (await field.validate('invalid space', mockArgs))).toBe('string');
   });
 
   it('should allow custom regex overrides and handle https enforcement', async () => {

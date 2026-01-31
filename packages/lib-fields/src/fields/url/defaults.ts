@@ -1,11 +1,13 @@
 export type URLType =
   | 'facebook'
   | 'facebookAccount'
+  | 'instagram'
   | 'instagramAccount'
   | 'linkedin'
   | 'linkedinAccount'
   | 'url'
   | 'website'
+  | 'x'
   | 'xAccount';
 
 export interface URLFieldDefaults {
@@ -21,34 +23,43 @@ export const URLTypeDefaults: Record<URLType, URLFieldDefaults> = {
     name: 'facebook',
     isUrl: true,
     label: 'Facebook Page URL',
-    placeholder: 'https://www.facebook.com/pages/your-page',
+    placeholder: 'https://www.facebook.com/...',
     regex: /^https?:\/\/(www\.)?facebook\.com\/.+/i,
   },
   facebookAccount: {
     name: 'facebookAccount',
     isUrl: true,
     label: 'Facebook Profile URL',
-    placeholder: 'https://www.facebook.com/username',
+    placeholder: 'https://www.facebook.com/...',
     regex: /^https?:\/\/(www\.)?facebook\.com\/.+/i,
+  },
+  instagram: {
+    name: 'instagram',
+    isUrl: true,
+    label: 'Instagram Page URL',
+    placeholder: 'https://www.instagram.com/...',
+    regex: /^https?:\/\/(www\.)?instagram\.com\/.+/i,
   },
   instagramAccount: {
     name: 'instagramAccount',
-    label: 'Instagram Account',
-    placeholder: 'username',
-    regex: /^[\w.]+$/,
+    isUrl: true,
+    label: 'Instagram Profile URL',
+    placeholder: 'https://www.instagram.com/...',
+    regex: /^https?:\/\/(www\.)?instagram\.com\/.+/i,
   },
   linkedin: {
     name: 'linkedin',
     isUrl: true,
-    label: 'LinkedIn URL',
-    placeholder: 'https://www.linkedin.com/in/username or /company/name',
-    regex: /^https?:\/\/(www\.)?linkedin\.com\/(in|company|school)\/.+/i,
+    label: 'LinkedIn Page URL',
+    placeholder: 'https://www.linkedin.com/...',
+    regex: /^https?:\/\/(www\.)?linkedin\.com\/.+/i,
   },
   linkedinAccount: {
     name: 'linkedinAccount',
-    label: 'LinkedIn Account',
-    placeholder: 'username',
-    regex: /^[a-z0-9-]+$/i,
+    isUrl: true,
+    label: 'LinkedIn Profile URL',
+    placeholder: 'https://www.linkedin.com/...',
+    regex: /^https?:\/\/(www\.)?linkedin\.com\/(in|company|school)\/.+/i,
   },
   url: {
     name: 'url',
@@ -64,11 +75,19 @@ export const URLTypeDefaults: Record<URLType, URLFieldDefaults> = {
     placeholder: 'https://example.com',
     regex: /^https?:\/\/.+/i,
   },
+  x: {
+    name: 'x',
+    isUrl: true,
+    label: 'X Page URL',
+    placeholder: 'https://x.com/...',
+    regex: /^https?:\/\/(www\.)?(x|twitter)\.com\/.+/i,
+  },
   xAccount: {
     name: 'xAccount',
-    label: 'X Account',
-    placeholder: '@username',
-    regex: /^@?\w{1,15}$/,
+    isUrl: true,
+    label: 'X Profile URL',
+    placeholder: 'https://x.com/...',
+    regex: /^https?:\/\/(www\.)?(x|twitter)\.com\/\w+$/i,
   },
 };
 
