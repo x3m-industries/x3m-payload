@@ -3,6 +3,6 @@
     "jsx": "react-jsx"
   },
   "exclude": ["node_modules", "dist"],
-  "extends": "@x3m/lib-tsconfig/lib.json",
+  "extends": "@x3m-industries/lib-tsconfig/lib.json",
   "include": ["src", "tsup.config.ts", "eslint.config.js", "vitest.config.js"]
 }

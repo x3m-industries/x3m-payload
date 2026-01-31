@@ -1,12 +1,12 @@
-# @x3m/payload
+# @x3m-industries/payload
 
 A high-performance monorepo for Payload CMS libraries and utilities using Turborepo and Yarn.
 
 ## Packages
 
-- **[@x3m/lib-services](./packages/lib-services)**:  
+- **[@x3m-industries/lib-services](./packages/lib-services)**:  
   A toolkit for creating type-safe, generic CRUD services around Payload collections.
-- **[@x3m/lib-fields](./packages/lib-fields)**:  
+- **[@x3m-industries/lib-fields](./packages/lib-fields)**:  
   A collection of ready-to-use Payload fields (e.g., Phone, VAT) with validation and formatting logic.
 
 ## Getting Started

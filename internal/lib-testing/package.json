@@ -1,5 +1,5 @@
 {
-  "name": "@x3m/lib-testing",
+  "name": "@x3m-industries/lib-testing",
   "version": "0.0.0",
   "type": "module",
   "main": "./index.js",

@@ -2442,9 +2442,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@x3m/lib-eslint@workspace:*, @x3m/lib-eslint@workspace:internal/lib-eslint":
+"@x3m-industries/lib-eslint@workspace:*, @x3m-industries/lib-eslint@workspace:internal/lib-eslint":
   version: 0.0.0-use.local
-  resolution: "@x3m/lib-eslint@workspace:internal/lib-eslint"
+  resolution: "@x3m-industries/lib-eslint@workspace:internal/lib-eslint"
   dependencies:
     "@payloadcms/eslint-config": "npm:^3.9.0"
     eslint-config-next: "npm:15.4.11"
@@ -2454,16 +2454,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@x3m/lib-fields@workspace:packages/lib-fields":
+"@x3m-industries/lib-fields@workspace:packages/lib-fields":
   version: 0.0.0-use.local
-  resolution: "@x3m/lib-fields@workspace:packages/lib-fields"
+  resolution: "@x3m-industries/lib-fields@workspace:packages/lib-fields"
   dependencies:
     "@payloadcms/ui": "npm:^3.74.0"
     "@types/react": "npm:^19.2.10"
     "@types/react-dom": "npm:^19.2.3"
-    "@x3m/lib-eslint": "workspace:*"
-    "@x3m/lib-testing": "workspace:*"
-    "@x3m/lib-tsconfig": "workspace:*"
+    "@x3m-industries/lib-eslint": "workspace:*"
+    "@x3m-industries/lib-testing": "workspace:*"
+    "@x3m-industries/lib-tsconfig": "workspace:*"
     countries-list: "npm:^3.2.2"
     eslint: "npm:^9.39.2"
     graphql: "npm:^16.12.0"
@@ -2483,13 +2483,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@x3m/lib-services@workspace:packages/lib-services":
+"@x3m-industries/lib-services@workspace:packages/lib-services":
   version: 0.0.0-use.local
-  resolution: "@x3m/lib-services@workspace:packages/lib-services"
+  resolution: "@x3m-industries/lib-services@workspace:packages/lib-services"
   dependencies:
-    "@x3m/lib-eslint": "workspace:*"
-    "@x3m/lib-testing": "workspace:*"
-    "@x3m/lib-tsconfig": "workspace:*"
+    "@x3m-industries/lib-eslint": "workspace:*"
+    "@x3m-industries/lib-testing": "workspace:*"
+    "@x3m-industries/lib-tsconfig": "workspace:*"
     eslint: "npm:^9.39.2"
     graphql: "npm:^16.12.0"
     payload: "npm:^3.74.0"
@@ -2501,9 +2501,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@x3m/lib-testing@workspace:*, @x3m/lib-testing@workspace:internal/lib-testing":
+"@x3m-industries/lib-testing@workspace:*, @x3m-industries/lib-testing@workspace:internal/lib-testing":
   version: 0.0.0-use.local
-  resolution: "@x3m/lib-testing@workspace:internal/lib-testing"
+  resolution: "@x3m-industries/lib-testing@workspace:internal/lib-testing"
   dependencies:
     vite-tsconfig-paths: "npm:^5.1.4"
   peerDependencies:
@@ -2511,15 +2511,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@x3m/lib-tsconfig@workspace:*, @x3m/lib-tsconfig@workspace:internal/lib-tsconfig":
+"@x3m-industries/lib-tsconfig@workspace:*, @x3m-industries/lib-tsconfig@workspace:internal/lib-tsconfig":
   version: 0.0.0-use.local
-  resolution: "@x3m/lib-tsconfig@workspace:internal/lib-tsconfig"
+  resolution: "@x3m-industries/lib-tsconfig@workspace:internal/lib-tsconfig"
   languageName: unknown
   linkType: soft
 
-"@x3m/payload@workspace:.":
+"@x3m-industries/payload@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@x3m/payload@workspace:."
+  resolution: "@x3m-industries/payload@workspace:."
   dependencies:
     "@changesets/cli": "npm:^2.29.8"
     "@commitlint/cli": "npm:^20.4.0"

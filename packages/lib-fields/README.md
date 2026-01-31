@@ -1,4 +1,4 @@
-# @x3m/lib-fields
+# @x3m-industries/lib-fields
 
 A collection of high-quality, pre-configured fields for Payload CMS.
 
@@ -10,7 +10,7 @@ A collection of high-quality, pre-configured fields for Payload CMS.
 ## Installation
 
 ```bash
-yarn add @x3m/lib-fields
+yarn add @x3m-industries/lib-fields
 ```
 
 ## Usage
@@ -18,7 +18,7 @@ yarn add @x3m/lib-fields
 ### Phone Field
 
 ```typescript
-import { phoneField } from '@x3m/lib-fields';
+import { phoneField } from '@x3m-industries/lib-fields';
 
 // In your Collection Config
 const Users = {
@@ -41,7 +41,7 @@ const Users = {
 ### VAT Field
 
 ```typescript
-import { vatField } from '@x3m/lib-fields';
+import { vatField } from '@x3m-industries/lib-fields';
 
 // In your Collection Config
 const Companies = {

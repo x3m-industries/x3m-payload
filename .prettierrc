@@ -7,7 +7,7 @@
     "^next",
     "^payload",
     "<THIRD_PARTY_MODULES>",
-    "^@x3m/(.*)$",
+    "^@x3m-industries/(.*)$",
     "^@/(.*)$",
     "^[./]"
   ],

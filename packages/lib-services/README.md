@@ -1,4 +1,4 @@
-# @x3m/lib-services
+# @x3m-industries/lib-services
 
 Type-safe service factory for interacting with Payload CMS collections.
 
@@ -12,7 +12,7 @@ Type-safe service factory for interacting with Payload CMS collections.
 ## Installation
 
 ```bash
-yarn add @x3m/lib-services
+yarn add @x3m-industries/lib-services
 ```
 
 ## Usage
@@ -23,7 +23,7 @@ Create a service instance for your collection. We recommend exporting purely the
 
 ```typescript
 // packages/your-package/src/services/todos.ts
-import { createCollectionService } from '@x3m/lib-services';
+import { createCollectionService } from '@x3m-industries/lib-services';
 
 import { getPayload } from '../utils/get-payload';
 

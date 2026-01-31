@@ -1,5 +1,5 @@
 {
-  "name": "@x3m/lib-eslint",
+  "name": "@x3m-industries/lib-eslint",
   "version": "0.0.0",
   "type": "module",
   "main": "./index.js",

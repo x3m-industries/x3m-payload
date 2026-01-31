@@ -1,5 +1,5 @@
 {
-  "name": "@x3m/payload",
+  "name": "@x3m-industries/payload",
   "version": "0.0.0",
   "workspaces": [
     "internal/*",

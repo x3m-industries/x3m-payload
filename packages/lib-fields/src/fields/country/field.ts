@@ -39,7 +39,7 @@ export function countryField({ config = {}, overrides = {} }: CountryFieldProps)
             clientProps: {
               config,
             },
-            path: '@x3m/lib-fields/country#CountrySelectComponent',
+            path: '@x3m-industries/lib-fields/country#CountrySelectComponent',
           },
         },
       },

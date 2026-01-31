@@ -1,4 +1,4 @@
-import config from '@x3m/lib-eslint';
+import config from '@x3m-industries/lib-eslint';
 
 export default [
   ...config,
