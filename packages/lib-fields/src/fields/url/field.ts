@@ -129,8 +129,8 @@ export function urlField({ config = {}, overrides = {} }: URLFieldProps = {}): F
           ({ value }) => {
             let normalized = normalizeString(value);
 
-            if (https && normalized && !normalized.startsWith('http') && isUrlLike) {
-              normalized = `https://${normalized}`;
+            if (normalized && !normalized.startsWith('http') && isUrlLike) {
+              normalized = `${https ? 'https' : 'http'}://${normalized}`;
             }
 
             return normalized;

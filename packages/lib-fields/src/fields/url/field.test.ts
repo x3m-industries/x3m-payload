@@ -68,6 +68,14 @@ describe('urlField', () => {
     expect(hook({ value: 'https://google.com' })).toBe('https://google.com');
   });
 
+  it('should auto-prepend http in beforeValidate hook if https is false', () => {
+    const fields = urlField({ config: { type: 'url', https: false } });
+    const field = fields[0] as any;
+    const hook = field.hooks.beforeValidate[0];
+
+    expect(hook({ value: 'google.com' })).toBe('http://google.com');
+  });
+
   it('should validate account handles correctly', async () => {
     const fields = urlField({ config: { type: 'instagramAccount' } });
     const field = fields[0] as any;
