@@ -1,15 +1,40 @@
-name: Release
+name: CI/CD
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
+  validate:
+    name: Build, Lint, and Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'yarn'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Dependencies
+        run: yarn install --immutable
+
+      - name: Validate
+        run: yarn validate
+
   release:
     name: Release
+    needs: validate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
