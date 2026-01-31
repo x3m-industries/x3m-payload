@@ -1,0 +1,5 @@
+{
+  "exclude": ["node_modules", "dist"],
+  "extends": "@x3m/lib-tsconfig/lib.json",
+  "include": ["src"]
+}
