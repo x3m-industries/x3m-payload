@@ -1,6 +1,15 @@
 {
   "name": "@x3m/lib-services",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "description": "Base service architecture for Payload CMS applications.",
+  "homepage": "https://github.com/x3m-industries/x3m-payload/tree/main/packages/lib-services#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x3m-industries/x3m-payload.git",
+    "directory": "packages/lib-services"
+  },
+  "license": "MIT",
+  "author": "X3M Industries <info@x3m.industries>",
   "type": "module",
   "exports": {
     ".": {
@@ -13,6 +22,10 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup",
     "clean": "rm -Rf .turbo dist",
@@ -34,5 +47,8 @@
   },
   "peerDependencies": {
     "payload": "*"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
