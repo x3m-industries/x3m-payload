@@ -29,14 +29,5 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Check formatting
-        run: yarn format:check
-
-      - name: Typecheck
-        run: yarn typecheck
-
-      - name: Lint
-        run: yarn lint
-
-      - name: Build
-        run: yarn build
+      - name: Validate
+        run: yarn validate
