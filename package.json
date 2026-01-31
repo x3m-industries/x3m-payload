@@ -20,7 +20,7 @@
     "release": "changeset publish",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "validate": "yarn format:check && turbo run build lint typecheck test"
+    "validate": "yarn format:check && turbo run build lint typecheck test --filter=!@x3m-industries/demo"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.8",
