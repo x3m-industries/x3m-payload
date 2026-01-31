@@ -8,6 +8,10 @@
     "clean": {
       "cache": false
     },
+    "coverage": {
+      "dependsOn": ["^coverage"],
+      "outputs": ["coverage/**"]
+    },
     "dev": {
       "cache": false,
       "persistent": true
