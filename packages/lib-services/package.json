@@ -1,6 +1,6 @@
 {
   "name": "@x3m-industries/lib-services",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Base service architecture for Payload CMS applications.",
   "homepage": "https://github.com/x3m-industries/x3m-payload/tree/main/packages/lib-services#readme",
   "repository": {
