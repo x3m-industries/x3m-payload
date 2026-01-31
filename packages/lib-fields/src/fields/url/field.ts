@@ -3,7 +3,7 @@ import { deepMerge } from 'payload';
 import { text } from 'payload/shared';
 
 import { normalizeString } from '../../utils/normalization.js';
-import { type URLType, URLTypeDefaults, URL_LIKE_TYPES } from './defaults.js';
+import { type URLType, getURLConfig } from './defaults.js';
 
 export type URLFieldOverrides = Partial<Omit<TextField, 'type'>>;
 
@@ -12,10 +12,16 @@ export type URLFieldOverrides = Partial<Omit<TextField, 'type'>>;
  */
 export interface URLFieldConfig {
   /**
-   * Enforce https protocol (only applies to URL-like types)
+   * Enforce https protocol
    * @default true
    */
   https?: boolean;
+  /**
+   * Whether the URL should be specifically for an account/profile.
+   * Only applies to select social platforms.
+   * @default false
+   */
+  isAccount?: boolean;
   /** Custom regex for validation */
   regex?: RegExp;
   /**
@@ -42,24 +48,23 @@ export interface URLFieldProps {
  * @returns An array containing the configured Payload field
  */
 export function urlField({ config = {}, overrides = {} }: URLFieldProps = {}): Field[] {
-  const { type = 'url', https = true, regex } = config;
-  const defaults = URLTypeDefaults[type];
-  const finalRegex = regex || defaults.regex;
-  const isUrlLike = URL_LIKE_TYPES.includes(type);
+  const { type = 'url', https = true, isAccount = false, regex } = config;
+  const resolvedConfig = getURLConfig(type, isAccount);
+  const finalRegex = regex || resolvedConfig.regex;
 
   const field: TextField = deepMerge<TextField, URLFieldOverrides>(
     {
-      name: defaults.name,
+      name: resolvedConfig.name,
       type: 'text',
       admin: {
-        placeholder: defaults.placeholder,
+        placeholder: resolvedConfig.placeholder,
       },
       hooks: {
         beforeValidate: [
           ({ value }) => {
             let normalized = normalizeString(value);
 
-            if (normalized && !normalized.startsWith('http') && isUrlLike) {
+            if (normalized && !normalized.startsWith('http')) {
               normalized = `${https ? 'https' : 'http'}://${normalized}`;
             }
 
@@ -67,7 +72,7 @@ export function urlField({ config = {}, overrides = {} }: URLFieldProps = {}): F
           },
         ],
       },
-      label: defaults.label,
+      label: resolvedConfig.label,
       validate: async (val, args) => {
         // Run standard Payload text validation first
         const result = await text(val, args);
@@ -81,10 +86,10 @@ export function urlField({ config = {}, overrides = {} }: URLFieldProps = {}): F
         }
 
         if (finalRegex && !finalRegex.test(stringVal)) {
-          return `Please enter a valid ${defaults.label.toLowerCase()}`;
+          return `Please enter a valid ${resolvedConfig.label.toLowerCase()}`;
         }
 
-        if (https && isUrlLike && !stringVal.startsWith('https://')) {
+        if (https && !stringVal.startsWith('https://')) {
           return 'Protocol must be https://';
         }
 

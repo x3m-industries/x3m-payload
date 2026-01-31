@@ -1,96 +1,108 @@
+/**
+ * Core platforms supported.
+ */
 export type URLType =
   | 'facebook'
-  | 'facebookAccount'
   | 'instagram'
-  | 'instagramAccount'
   | 'linkedin'
-  | 'linkedinAccount'
+  | 'tiktok'
   | 'url'
   | 'website'
+  | 'whatsapp'
   | 'x'
-  | 'xAccount';
+  | 'youtube';
 
 export interface URLFieldDefaults {
-  isUrl?: boolean;
+  accountRegex?: RegExp; // Specific pattern if isAccount is true
+  baseRegex: RegExp;
   label: string;
   name: string;
-  placeholder?: string;
-  regex?: RegExp;
+  placeholder: string;
 }
+
+/**
+ * Shared regex snippets
+ */
+const PROTOCOL = /https?:\/\//i;
+const FB_BASE = /(https?:\/\/)?(www\.|m\.)?facebook\.com\//i;
+const IG_BASE = /(https?:\/\/)?(www\.)?instagram\.com\//i;
+const LI_BASE = /(https?:\/\/)?(www\.)?linkedin\.com\//i;
+const TT_BASE = /(https?:\/\/)?(www\.)?tiktok\.com\//i;
+const WA_BASE = /(https?:\/\/)?(wa\.me|api\.whatsapp\.com\/send\?phone=)/i;
+const X_BASE = /(https?:\/\/)?(www\.)?(x|twitter)\.com\//i;
+const YT_BASE = /(https?:\/\/)?(www\.)?youtube\.com\//i;
 
 export const URLTypeDefaults: Record<URLType, URLFieldDefaults> = {
   facebook: {
     name: 'facebook',
-    isUrl: true,
-    label: 'Facebook Page URL',
+    accountRegex: new RegExp(`^${FB_BASE.source}[\\w.]+`, 'i'),
+    baseRegex: new RegExp(`^${FB_BASE.source}`, 'i'),
+    label: 'Facebook',
     placeholder: 'https://www.facebook.com/...',
-    regex: /^https?:\/\/(www\.)?facebook\.com\/.+/i,
-  },
-  facebookAccount: {
-    name: 'facebookAccount',
-    isUrl: true,
-    label: 'Facebook Profile URL',
-    placeholder: 'https://www.facebook.com/...',
-    regex: /^https?:\/\/(www\.)?facebook\.com\/.+/i,
   },
   instagram: {
     name: 'instagram',
-    isUrl: true,
-    label: 'Instagram Page URL',
+    accountRegex: new RegExp(`^${IG_BASE.source}[\\w.]+/?$`, 'i'),
+    baseRegex: new RegExp(`^${IG_BASE.source}`, 'i'),
+    label: 'Instagram',
     placeholder: 'https://www.instagram.com/...',
-    regex: /^https?:\/\/(www\.)?instagram\.com\/.+/i,
-  },
-  instagramAccount: {
-    name: 'instagramAccount',
-    isUrl: true,
-    label: 'Instagram Profile URL',
-    placeholder: 'https://www.instagram.com/...',
-    regex: /^https?:\/\/(www\.)?instagram\.com\/.+/i,
   },
   linkedin: {
     name: 'linkedin',
-    isUrl: true,
-    label: 'LinkedIn Page URL',
+    accountRegex: new RegExp(`^${LI_BASE.source}(in|company|school|showcase)/.+`, 'i'),
+    baseRegex: new RegExp(`^${LI_BASE.source}`, 'i'),
+    label: 'LinkedIn',
     placeholder: 'https://www.linkedin.com/...',
-    regex: /^https?:\/\/(www\.)?linkedin\.com\/.+/i,
   },
-  linkedinAccount: {
-    name: 'linkedinAccount',
-    isUrl: true,
-    label: 'LinkedIn Profile URL',
-    placeholder: 'https://www.linkedin.com/...',
-    regex: /^https?:\/\/(www\.)?linkedin\.com\/(in|company|school)\/.+/i,
+  tiktok: {
+    name: 'tiktok',
+    accountRegex: new RegExp(`^${TT_BASE.source}@[\\w.]+/?$`, 'i'),
+    baseRegex: new RegExp(`^${TT_BASE.source}`, 'i'),
+    label: 'TikTok',
+    placeholder: 'https://www.tiktok.com/@username',
   },
   url: {
     name: 'url',
-    isUrl: true,
+    baseRegex: new RegExp(`^${PROTOCOL.source}`, 'i'),
     label: 'URL',
     placeholder: 'https://example.com',
-    regex: /^https?:\/\/.+/i,
   },
   website: {
     name: 'website',
-    isUrl: true,
+    baseRegex: new RegExp(`^${PROTOCOL.source}`, 'i'),
     label: 'Website',
     placeholder: 'https://example.com',
-    regex: /^https?:\/\/.+/i,
+  },
+  whatsapp: {
+    name: 'whatsapp',
+    baseRegex: new RegExp(`^${WA_BASE.source}`, 'i'),
+    label: 'WhatsApp',
+    placeholder: 'https://wa.me/1234567890',
   },
   x: {
     name: 'x',
-    isUrl: true,
-    label: 'X Page URL',
+    accountRegex: new RegExp(`^${X_BASE.source}\\w{1,15}/?$`, 'i'),
+    baseRegex: new RegExp(`^${X_BASE.source}`, 'i'),
+    label: 'X (Twitter)',
     placeholder: 'https://x.com/...',
-    regex: /^https?:\/\/(www\.)?(x|twitter)\.com\/.+/i,
   },
-  xAccount: {
-    name: 'xAccount',
-    isUrl: true,
-    label: 'X Profile URL',
-    placeholder: 'https://x.com/...',
-    regex: /^https?:\/\/(www\.)?(x|twitter)\.com\/\w+$/i,
+  youtube: {
+    name: 'youtube',
+    accountRegex: new RegExp(`^${YT_BASE.source}(@|c/|channel/|user/).+`, 'i'),
+    baseRegex: new RegExp(`^${YT_BASE.source}`, 'i'),
+    label: 'YouTube',
+    placeholder: 'https://www.youtube.com/...',
   },
 };
 
-export const URL_LIKE_TYPES = Object.entries(URLTypeDefaults)
-  .filter(([_, d]) => d.isUrl)
-  .map(([k]) => k as URLType);
+/**
+ * Helper to get the correct config based on usage
+ */
+export const getURLConfig = (type: URLType, isAccount: boolean = false) => {
+  const defaults = URLTypeDefaults[type];
+  return {
+    ...defaults,
+    label: isAccount ? `${defaults.label} Profile` : defaults.label,
+    regex: isAccount && defaults.accountRegex ? defaults.accountRegex : defaults.baseRegex,
+  };
+};
