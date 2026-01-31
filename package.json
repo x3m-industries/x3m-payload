@@ -2,6 +2,7 @@
   "name": "@x3m/payload",
   "version": "0.0.0",
   "workspaces": [
+    "internal/*",
     "packages/*"
   ],
   "scripts": {
@@ -14,8 +15,9 @@
     "lint": "turbo run lint",
     "prepare": "husky",
     "release": "changeset publish",
+    "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "validate": "yarn format:check && turbo run build lint typecheck"
+    "validate": "yarn format:check && turbo run build lint typecheck test"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.8",

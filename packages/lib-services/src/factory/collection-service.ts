@@ -1,4 +1,4 @@
-import { CollectionSlug, DataFromCollectionSlug, PaginatedDocs, Payload } from 'payload';
+import type { CollectionSlug, DataFromCollectionSlug, PaginatedDocs, Payload } from 'payload';
 
 // Default method props
 
@@ -6,12 +6,9 @@ import { CollectionSlug, DataFromCollectionSlug, PaginatedDocs, Payload } from '
  * Parameters for creating a single document.
  * Enforces `data` to match the specific collection's schema.
  */
-type CreateOneParams<TSlug extends CollectionSlug> = Omit<
-  Parameters<Payload['create']>[0],
-  'collection' | 'data'
-> & {
+type CreateOneParams<TSlug extends CollectionSlug> = {
   data: DataFromCollectionSlug<TSlug>;
-};
+} & Omit<Parameters<Payload['create']>[0], 'collection' | 'data'>;
 
 /**
  * Parameters for finding multiple documents.
@@ -38,8 +35,8 @@ export type DefaultCollectionService<TSlug extends CollectionSlug> = {
 // Extensions
 
 type ExtensionContext<TSlug extends CollectionSlug> = {
-  getPayload: () => Promise<Payload>;
   collection: TSlug;
+  getPayload: () => Promise<Payload>;
 };
 
 type ExtensionFunction<TSlug extends CollectionSlug, TExtensions = Record<string, unknown>> = (
@@ -55,12 +52,12 @@ export interface CollectionServiceProps<
   TSlug extends CollectionSlug,
   TExtensions = Record<string, unknown>,
 > {
-  /** A function that returns the Payload instance (for lazy loading) */
-  getPayload: () => Promise<Payload>;
   /** The slug of the collection this service manages */
   collection: TSlug;
   /** Optional function to extend the service with custom methods */
   extensions?: ExtensionFunction<TSlug, TExtensions>;
+  /** A function that returns the Payload instance (for lazy loading) */
+  getPayload: () => Promise<Payload>;
 }
 
 /**
@@ -92,7 +89,7 @@ export function createCollectionService<
       const payload = await props.getPayload();
       const result = await payload.create({
         collection: props.collection,
-        data: data,
+        data,
         ...rest,
       });
 
@@ -105,7 +102,7 @@ export function createCollectionService<
         ...params,
       });
 
-      return result as PaginatedDocs<DataFromCollectionSlug<TSlug>>;
+      return result;
     },
     findOneByID: async (params: FindOneByIDParams) => {
       const payload = await props.getPayload();
@@ -125,8 +122,8 @@ export function createCollectionService<
   // Extensions
 
   const extensionContext: ExtensionContext<TSlug> = {
-    getPayload: props.getPayload,
     collection: props.collection,
+    getPayload: props.getPayload,
   };
 
   return {

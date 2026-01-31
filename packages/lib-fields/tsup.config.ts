@@ -1,11 +1,11 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ['src/index.ts'],
-  format: ['cjs', 'esm'],
-  dts: true,
   clean: true,
+  dts: true,
+  entry: ['src/index.ts'],
+  external: ['@payloadcms/ui', 'payload', 'react', 'react-dom'],
+  format: ['cjs', 'esm'],
   sourcemap: true,
   treeshake: true,
-  external: ['payload'],
 });

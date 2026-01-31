@@ -15,15 +15,22 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup",
+    "clean": "rm -Rf .turbo dist",
     "dev": "tsup --watch",
+    "lint": "eslint .",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@x3m/lib-eslint": "workspace:*",
+    "@x3m/lib-testing": "workspace:*",
     "@x3m/lib-tsconfig": "workspace:*",
+    "eslint": "^9.39.2",
     "graphql": "^16.12.0",
     "payload": "^3.74.0",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   },
   "peerDependencies": {
     "payload": "*"

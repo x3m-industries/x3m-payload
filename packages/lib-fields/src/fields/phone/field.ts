@@ -1,7 +1,13 @@
-import { Field, TextField, deepMerge } from 'payload';
+import type { Field, TextField } from 'payload';
+import { deepMerge } from 'payload';
 import { text } from 'payload/shared';
 
-import parsePhoneNumberFromString, { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
+import parsePhoneNumberFromString, {
+  type CountryCode,
+  isValidPhoneNumber,
+} from 'libphonenumber-js';
+
+import { normalizeString } from '../../utils/normalization.js';
 
 export type PhoneFieldOverrides = Partial<Omit<TextField, 'type'>>;
 
@@ -20,10 +26,10 @@ export interface PhoneFieldConfig {
  * Props for the phone number field.
  */
 export interface PhoneFieldProps {
-  /** Overrides for the underlying Payload text field */
-  overrides?: PhoneFieldOverrides;
   /** Configuration for phone validation logic */
   config?: PhoneFieldConfig;
+  /** Overrides for the underlying Payload text field */
+  overrides?: PhoneFieldOverrides;
 }
 
 /**
@@ -36,31 +42,25 @@ export interface PhoneFieldProps {
  * @param props Configuration options
  * @returns An array containing the configured Payload field
  */
-export function phoneField({ overrides = {}, config = {} }: PhoneFieldProps): Field[] {
+export function phoneField({ config = {}, overrides = {} }: PhoneFieldProps): Field[] {
   type PhoneTextField = TextField;
   const phoneTextField = deepMerge<PhoneTextField, PhoneFieldOverrides>(
     {
-      type: 'text',
       name: 'phone',
-      label: 'Phone',
+      type: 'text',
       hooks: {
         beforeValidate: [
           ({ value }) => {
-            if (!value) {
-              return value;
-            }
-
-            const trimmedValue = value.trim().replace(/^00/, '+');
-
-            const phoneNumber = parsePhoneNumberFromString(trimmedValue, config.defaultCountry);
+            const normalizedValue = normalizeString(value).replace(/^00/, '+');
+            const phoneNumber = parsePhoneNumberFromString(normalizedValue, config.defaultCountry);
             if (phoneNumber) {
               return phoneNumber.formatInternational();
             }
-
-            return trimmedValue;
+            return normalizedValue;
           },
         ],
       },
+      label: 'Phone',
       validate: (value, args) => {
         const result = text(value, args);
         if (result !== true) {

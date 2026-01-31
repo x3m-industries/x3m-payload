@@ -15,21 +15,37 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup",
+    "clean": "rm -Rf .turbo dist",
     "dev": "tsup --watch",
+    "lint": "eslint .",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "countries-list": "^3.2.2",
     "jsvat": "^2.5.4",
     "libphonenumber-js": "^1.12.36"
   },
   "devDependencies": {
+    "@payloadcms/ui": "^3.74.0",
+    "@types/react": "^19.2.10",
+    "@types/react-dom": "^19.2.3",
+    "@x3m/lib-eslint": "workspace:*",
+    "@x3m/lib-testing": "workspace:*",
     "@x3m/lib-tsconfig": "workspace:*",
+    "eslint": "^9.39.2",
     "graphql": "^16.12.0",
     "payload": "^3.74.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   },
   "peerDependencies": {
-    "payload": "*"
+    "@payloadcms/ui": "*",
+    "payload": "*",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
   }
 }

@@ -1,7 +1,10 @@
-import { Field, TextField, deepMerge } from 'payload';
+import type { Field, TextField } from 'payload';
+import { deepMerge } from 'payload';
 import { text } from 'payload/shared';
 
-import { Country, checkVAT, countries } from 'jsvat';
+import { type Country, checkVAT, countries } from 'jsvat';
+
+import { normalizeString } from '../../utils/normalization.js';
 
 export type VatFieldOverrides = Partial<Omit<TextField, 'type'>>;
 
@@ -18,10 +21,10 @@ export interface VatFieldConfig {
  * Props for the VAT number field.
  */
 export interface VatFieldProps {
-  /** Overrides for the underlying Payload text field */
-  overrides?: VatFieldOverrides;
   /** Configuration for VAT validation logic */
   config?: VatFieldConfig;
+  /** Overrides for the underlying Payload text field */
+  overrides?: VatFieldOverrides;
 }
 
 /**
@@ -34,25 +37,16 @@ export interface VatFieldProps {
  * @param props Configuration options
  * @returns An array containing the configured Payload field
  */
-export function vatField({ overrides = {}, config = {} }: VatFieldProps): Field[] {
+export function vatField({ config = {}, overrides = {} }: VatFieldProps): Field[] {
   type VatTextField = TextField;
   const vatTextField = deepMerge<VatTextField, VatFieldOverrides>(
     {
-      type: 'text',
       name: 'vat',
-      label: 'VAT Number',
+      type: 'text',
       hooks: {
-        beforeValidate: [
-          ({ value }) => {
-            if (!value) {
-              return value;
-            }
-
-            // Simple cleanup: uppercase and trim and remove dots
-            return value.trim().toUpperCase().replace(/\./g, '');
-          },
-        ],
+        beforeValidate: [({ value }) => normalizeString(value).toUpperCase().replace(/\./g, '')],
       },
+      label: 'VAT Number',
       validate: (value, args) => {
         const result = text(value, args);
         if (result !== true) {
