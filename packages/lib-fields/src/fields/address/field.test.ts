@@ -1,8 +1,8 @@
-import type { GroupField, TextField } from 'payload';
+import type { FieldHookArgs, GroupField, TextField } from 'payload';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { addressField } from './field.js';
+import { addressField } from './field';
 
 vi.mock('.../country/field.js', () => ({
   countryField: vi.fn().mockReturnValue([{ name: 'country', type: 'text' }]),
@@ -55,24 +55,23 @@ describe('addressField', () => {
   });
 
   describe('Subfield Validations', () => {
-    it('should normalize (trim) subfield values', () => {
+    it('should normalize (trim) subfield values', async () => {
       const [field] = addressField();
       const group = field as { fields: TextField[] } & GroupField;
-      group.fields.forEach((f) => {
+      for (const f of group.fields) {
         if ((f as { name: string }).name === 'country') {
-          return;
+          continue;
         }
         const textField = f;
         const hook = textField.hooks?.beforeValidate?.[0];
         if (hook) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          expect(hook({ value: '  test  ' } as any)).toBe('test');
+          const result = await hook({ value: '  test  ' } as unknown as FieldHookArgs);
+          expect(result).toBe('test');
         } else {
           throw new Error(`Hook missing for field ${(f as { name: string }).name}`);
         }
-      });
+      }
     });
-
     it('should have standard validation for subfields', () => {
       const [field] = addressField();
       const group = field as { fields: TextField[] } & GroupField;

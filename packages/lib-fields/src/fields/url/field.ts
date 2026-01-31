@@ -64,8 +64,12 @@ export function urlField({ config = {}, overrides = {} }: URLFieldProps = {}): F
           ({ value }) => {
             let normalized = normalizeString(value);
 
-            if (normalized && !normalized.startsWith('http')) {
-              normalized = `${https ? 'https' : 'http'}://${normalized}`;
+            if (normalized) {
+              if (!normalized.startsWith('http')) {
+                normalized = `${https ? 'https' : 'http'}://${normalized}`;
+              } else if (https && normalized.startsWith('http://')) {
+                normalized = normalized.replace(/^http:\/\//, 'https://');
+              }
             }
 
             return normalized;

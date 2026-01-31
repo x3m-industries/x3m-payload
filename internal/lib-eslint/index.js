@@ -19,6 +19,8 @@ export const defaultESLintIgnores = [
   '**/build/',
   '**/node_modules/',
   '**/temp/',
+  '**/coverage/',
+  '**/.coverage/',
 ];
 
 export const rootEslintConfig = [

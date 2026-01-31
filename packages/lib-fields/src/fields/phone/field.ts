@@ -42,7 +42,7 @@ export interface PhoneFieldProps {
  * @param props Configuration options
  * @returns An array containing the configured Payload field
  */
-export function phoneField({ config = {}, overrides = {} }: PhoneFieldProps): Field[] {
+export function phoneField({ config = {}, overrides = {} }: PhoneFieldProps = {}): Field[] {
   type PhoneTextField = TextField;
   const phoneTextField = deepMerge<PhoneTextField, PhoneFieldOverrides>(
     {

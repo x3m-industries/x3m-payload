@@ -15,10 +15,10 @@ import {
 import type { Option } from '@payloadcms/ui/elements/ReactSelect';
 import { type ICountry, type TCountryCode, countries, getEmojiFlag } from 'countries-list';
 
-import type { CountryFieldConfig } from './field.js';
+import type { CountryFieldConfig } from '../fields/country/field';
 
-type CountrySelectProps = {
-  config?: CountryFieldConfig;
+type CountrySelectComponentProps = {
+  config: CountryFieldConfig;
   // Using 'any' for the component types here matches how RenderCustomComponent
   // expects its props to be passed in the Payload UI package.
   customComponents?: {
@@ -30,7 +30,7 @@ type CountrySelectProps = {
   };
 } & TextFieldClientProps;
 
-export function CountrySelectComponent(props: CountrySelectProps) {
+export function CountrySelectComponent(props: CountrySelectComponentProps) {
   const { config, customComponents, field, path, readOnly, validate } = props;
 
   const { AfterInput, BeforeInput, Description, Error, Label } = customComponents || {};
@@ -39,12 +39,8 @@ export function CountrySelectComponent(props: CountrySelectProps) {
     path,
     validate: (val, options) => {
       if (typeof validate === 'function') {
-        return (
-          validate as (
-            v: null | string,
-            o: Record<string, unknown>
-          ) => Promise<string | true> | string | true
-        )(val, { ...options, ...field });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return validate(val as null | string, { ...options, required: field.required } as any);
       }
       return true;
     },

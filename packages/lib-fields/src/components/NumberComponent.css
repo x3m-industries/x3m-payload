@@ -1,0 +1,22 @@
+.number-field-container .number-input {
+  width: 100%;
+  padding: 12px 15px; /* Adjust to match Payload's default input styling */
+  border: 1px solid var(--theme-elevation-150);
+  background: var(--theme-input-bg);
+  color: var(--theme-elevation-800);
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.number-field-container.error .number-input {
+  border-color: var(--theme-error-500);
+}
+
+.number-field-container.read-only .number-input {
+  background: transparent;
+  border-color: transparent;
+  pointer-events: none;
+  padding-left: 0;
+}

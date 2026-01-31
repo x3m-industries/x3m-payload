@@ -37,14 +37,14 @@ export interface VatFieldProps {
  * @param props Configuration options
  * @returns An array containing the configured Payload field
  */
-export function vatField({ config = {}, overrides = {} }: VatFieldProps): Field[] {
+export function vatField({ config = {}, overrides = {} }: VatFieldProps = {}): Field[] {
   type VatTextField = TextField;
   const vatTextField = deepMerge<VatTextField, VatFieldOverrides>(
     {
       name: 'vat',
       type: 'text',
       hooks: {
-        beforeValidate: [({ value }) => normalizeString(value).toUpperCase().replace(/\./g, '')],
+        beforeValidate: [({ value }) => normalizeString(value).toUpperCase().replace(/[\s.]/g, '')],
       },
       label: 'VAT Number',
       validate: (value, args) => {

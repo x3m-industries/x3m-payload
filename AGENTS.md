@@ -4,7 +4,7 @@ Welcome to the **x3m-payload** monorepo. This document provides technical contex
 
 ## Project Overview
 
-This is a **Payload CMS** ecosystem monorepo. It focus on reusable fields, services, and configurations. It is designed for high performance and strict type safety.
+This is a **Payload CMS** ecosystem monorepo. It focuses on reusable fields, services, and configurations. It is designed for high performance and strict type safety.
 
 ## Tech Stack
 
@@ -62,7 +62,30 @@ New fields in `lib-fields` should:
     }
     ```
 4.  Use `normalizeString` from `utils/` for string cleaning.
-5.  Be exported from `packages/lib-fields/src/index.ts`.
+5.  **Custom Components**: If the field uses a custom React component, strict typing is REQUIRED:
+    ```typescript
+    type MyComponentProps = {
+      config: MyFieldConfig; // Always explicit
+      customComponents?: {
+        // Match Payload UI pattern
+        Label?: React.ReactNode;
+        Description?: React.ReactNode;
+        Error?: React.ReactNode;
+        // ...
+      };
+    } & TextFieldClientProps; // Or NumberFieldClientProps etc.
+    ```
+6.  Be exported from `packages/lib-fields/src/index.ts`.
+
+### 4. Agentic Workflow
+
+When acting as an AI agent:
+
+1.  **Read this file** first to understand context.
+2.  **Plan** your changes.
+3.  **Execute** changes.
+4.  **Validate** aggressively using `yarn validate`.
+5.  **Only request review** after `yarn validate` passes with 0 errors.
 
 ## Release Process
 

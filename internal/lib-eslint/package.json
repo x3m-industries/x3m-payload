@@ -5,8 +5,8 @@
   "type": "module",
   "main": "./index.js",
   "dependencies": {
-    "@payloadcms/eslint-config": "^3.9.0",
-    "eslint-config-next": "15.4.11"
+    "@payloadcms/eslint-config": "^3.28.0",
+    "eslint-config-next": "16.1.6"
   },
   "peerDependencies": {
     "eslint": "^9.0.0",

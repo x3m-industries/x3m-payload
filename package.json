@@ -3,12 +3,15 @@
   "version": "0.0.0",
   "workspaces": [
     "internal/*",
-    "packages/*"
+    "packages/*",
+    "demo"
   ],
   "scripts": {
     "build": "turbo run build",
     "changeset": "changeset",
     "clean": "turbo run clean && rm -Rf .turbo",
+    "coverage": "turbo run coverage",
+    "demo": "yarn workspace @x3m-industries/demo dev",
     "dev": "turbo run dev",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

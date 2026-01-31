@@ -2,6 +2,7 @@
  * Core platforms supported.
  */
 export type URLType =
+  | 'custom'
   | 'facebook'
   | 'instagram'
   | 'linkedin'
@@ -33,6 +34,12 @@ const X_BASE = /(https?:\/\/)?(www\.)?(x|twitter)\.com\//i;
 const YT_BASE = /(https?:\/\/)?(www\.)?youtube\.com\//i;
 
 export const URLTypeDefaults: Record<URLType, URLFieldDefaults> = {
+  custom: {
+    name: 'custom',
+    baseRegex: new RegExp(`^${PROTOCOL.source}`, 'i'),
+    label: 'Custom URL',
+    placeholder: 'https://...',
+  },
   facebook: {
     name: 'facebook',
     accountRegex: new RegExp(`^${FB_BASE.source}[\\w.]+`, 'i'),

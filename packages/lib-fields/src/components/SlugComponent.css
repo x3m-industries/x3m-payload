@@ -1,0 +1,35 @@
+/* Wrapper for input and lock button */
+.slug-field-component .input-wrapper {
+  position: relative;
+  display: block; /* Block to wrap input properly */
+}
+
+/* Ensure TextInput takes full width and remove margin */
+.slug-field-component .input-wrapper .field-type {
+  margin-bottom: 0;
+}
+
+/* Add padding to the input so text doesn't go under button */
+.slug-field-component .input-wrapper input {
+  padding-right: 35px;
+}
+
+.slug-field-component .lock-button {
+  position: absolute;
+  right: 5px; /* Slightly closer to edge */
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px;
+  margin: 0;
+  height: auto;
+  line-height: 1;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 5; /* Ensure above input */
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

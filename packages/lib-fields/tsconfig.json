@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsx"
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "noEmit": true
   },
   "exclude": ["node_modules", "dist"],
   "extends": "@x3m-industries/lib-tsconfig/lib.json",
-  "include": ["src", "tsup.config.ts", "eslint.config.js", "vitest.config.js"]
+  "include": ["src", "tsup.config.ts", "eslint.config.js", "vitest.config.js", "scripts"]
 }
