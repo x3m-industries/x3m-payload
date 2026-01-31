@@ -28,7 +28,15 @@ describe('urlField', () => {
     const fields = urlField({ config: { type: 'facebook' } });
     const field = fields[0] as any;
     expect(field.name).toBe('facebook');
-    expect(field.label).toBe('Facebook URL');
+    expect(field.label).toBe('Facebook Page URL');
+  });
+
+  it('should validate facebookAccount as a URL', async () => {
+    const fields = urlField({ config: { type: 'facebookAccount' } });
+    const field = fields[0] as any;
+
+    expect(await field.validate('https://www.facebook.com/user.name', mockArgs)).toBe(true);
+    expect(typeof (await field.validate('just-the-handle', mockArgs))).toBe('string');
   });
 
   it('should validate correctly with default regex', async () => {

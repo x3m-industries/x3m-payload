@@ -3,12 +3,7 @@ import { deepMerge } from 'payload';
 import { text } from 'payload/shared';
 
 import { normalizeString } from '../../utils/normalization.js';
-import {
-  type URLFieldDefaults,
-  type URLType,
-  URLTypeDefaults,
-  URL_LIKE_TYPES,
-} from './defaults.js';
+import { type URLType, URLTypeDefaults, URL_LIKE_TYPES } from './defaults.js';
 
 export type URLFieldOverrides = Partial<Omit<TextField, 'type'>>;
 

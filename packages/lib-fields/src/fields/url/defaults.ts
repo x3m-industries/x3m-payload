@@ -20,15 +20,16 @@ export const URLTypeDefaults: Record<URLType, URLFieldDefaults> = {
   facebook: {
     name: 'facebook',
     isUrl: true,
-    label: 'Facebook URL',
-    placeholder: 'https://www.facebook.com/username',
+    label: 'Facebook Page URL',
+    placeholder: 'https://www.facebook.com/pages/your-page',
     regex: /^https?:\/\/(www\.)?facebook\.com\/.+/i,
   },
   facebookAccount: {
     name: 'facebookAccount',
-    label: 'Facebook Account',
-    placeholder: 'username',
-    regex: /^[a-z0-9.]+$/i,
+    isUrl: true,
+    label: 'Facebook Profile URL',
+    placeholder: 'https://www.facebook.com/username',
+    regex: /^https?:\/\/(www\.)?facebook\.com\/.+/i,
   },
   instagramAccount: {
     name: 'instagramAccount',
