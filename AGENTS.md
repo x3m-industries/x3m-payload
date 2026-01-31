@@ -52,8 +52,17 @@ New fields in `lib-fields` should:
 
 1.  Be placed in `packages/lib-fields/src/fields/<name>/`.
 2.  Include a `field.ts` (configuration) and optionally a `field.test.ts`.
-3.  Use `normalizeString` from `utils/` for string cleaning.
-4.  Be exported from `packages/lib-fields/src/index.ts`.
+3.  **Standardized Props**: Use a `config`/`overrides` structure with named interfaces:
+    ```typescript
+    export interface MyFieldConfig { ... }
+    export interface MyFieldOverrides { ... }
+    export interface MyFieldProps {
+      config?: MyFieldConfig;
+      overrides?: MyFieldOverrides;
+    }
+    ```
+4.  Use `normalizeString` from `utils/` for string cleaning.
+5.  Be exported from `packages/lib-fields/src/index.ts`.
 
 ## Release Process
 
