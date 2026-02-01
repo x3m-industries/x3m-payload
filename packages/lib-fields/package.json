@@ -1,6 +1,6 @@
 {
   "name": "@x3m-industries/lib-fields",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "A collection of reusable Payload CMS fields.",
   "keywords": [
     "payload",

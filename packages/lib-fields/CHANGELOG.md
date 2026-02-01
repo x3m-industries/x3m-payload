@@ -1,5 +1,11 @@
 # @x3m-industries/lib-fields
 
+## 2.1.0
+
+### Minor Changes
+
+- 43f7b6a: Implement urlField with hasMany support, generic validation improvements, and strict type safety fixes.
+
 ## 2.0.1
 
 ### Patch Changes

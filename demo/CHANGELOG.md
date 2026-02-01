@@ -1,5 +1,12 @@
 # @x3m-industries/demo
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [43f7b6a]
+  - @x3m-industries/lib-fields@2.1.0
+
 ## 0.0.2
 
 ### Patch Changes
