@@ -78,7 +78,7 @@ export function slugField({ config = {}, overrides = {} }: SlugFieldProps = {}):
       },
       hooks: {
         beforeValidate: [
-          async ({ collection, data, operation, req, siblingData, value }) => {
+          async ({ collection, data, operation, originalDoc, req, siblingData, value }) => {
             // Check if locked (synced). Default to true if not found (e.g. on create)
             const isLocked = siblingData?.[checkboxName] !== false;
 
@@ -110,7 +110,10 @@ export function slugField({ config = {}, overrides = {} }: SlugFieldProps = {}):
             const finalSlug = await generateUniqueSlug({
               baseSlug,
               collectionSlug: collection?.slug || '',
-              currentDocId: operation === 'update' && data ? data.id : undefined,
+              currentDocId:
+                operation === 'update'
+                  ? (data && data.id) || (originalDoc && originalDoc.id)
+                  : undefined,
               fieldName: slugName,
               payload: req.payload,
             });

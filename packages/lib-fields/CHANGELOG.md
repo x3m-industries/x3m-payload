@@ -1,5 +1,13 @@
 # @x3m-industries/lib-fields
 
+## 2.0.1
+
+### Patch Changes
+
+- fix: fallback to original doc ID for slug uniqueness check
+  fix: normalize email domains to lowercase
+  fix: improve number field configuration types
+
 ## 2.0.0
 
 ### Major Changes

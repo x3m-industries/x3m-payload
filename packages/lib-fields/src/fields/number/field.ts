@@ -34,7 +34,7 @@ export function numberField({ config = {}, overrides = {} }: NumberFieldProps = 
     ...restConfig
   } = config;
 
-  let componentConfig = { ...restConfig, decimalScale };
+  let componentConfig: NumberFieldConfig = { ...restConfig, decimalScale };
 
   // Default scaling to true for percentage and currency if not explicitly set
   // The user wants scaling by default for these types
@@ -58,8 +58,7 @@ export function numberField({ config = {}, overrides = {} }: NumberFieldProps = 
   }
 
   // Ensure scaling is passed to the client component
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  componentConfig = { ...componentConfig, scaling: shouldScale } as any;
+  componentConfig = { ...componentConfig, scaling: shouldScale };
 
   const field = deepMerge<NumberField, NumberFieldOverrides>(
     {

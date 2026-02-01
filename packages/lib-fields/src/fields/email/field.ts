@@ -39,9 +39,9 @@ export interface EmailFieldProps {
 export function emailField({ config = {}, overrides = {} }: EmailFieldProps = {}): Field[] {
   const { allowedDomains = [], requiredDomain } = config;
 
-  const validDomains = [...allowedDomains];
+  const validDomains = [...allowedDomains].map((d) => d.toLowerCase());
   if (requiredDomain) {
-    validDomains.push(requiredDomain);
+    validDomains.push(requiredDomain.toLowerCase());
   }
 
   const field = deepMerge<EmailField, EmailFieldOverrides>(
