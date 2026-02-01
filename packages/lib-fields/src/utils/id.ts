@@ -62,6 +62,9 @@ export interface GenerateIDOptions {
 
 const CONFUSING_CHARS = /[O0I1Ll]/g;
 
+const BASE_CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+const SAFE_CHARSET = BASE_CHARSET.replace(CONFUSING_CHARS, '');
+
 /**
  * Generates a unique ID based on the provided configuration.
  * Leverages standard libraries for reliability and cryptographic security.
@@ -101,10 +104,7 @@ export const generateId = (options: GenerateIDOptions = {}): string => {
 
     case 'custom':
     default: {
-      let charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      if (avoidConfusingChars) {
-        charset = charset.replace(CONFUSING_CHARS, '');
-      }
+      const charset = avoidConfusingChars ? SAFE_CHARSET : BASE_CHARSET;
 
       const actualCount = count ?? 10;
       let randomPart = '';
