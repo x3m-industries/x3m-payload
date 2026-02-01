@@ -5,6 +5,7 @@ import { text } from 'payload/shared';
 import { type Country, checkVAT, countries } from 'jsvat';
 
 import { normalizeString } from '../../utils/normalization.js';
+import { validateWithHasMany } from '../../utils/validation.js';
 
 export type VatFieldOverrides = Partial<Omit<TextField, 'type'>>;
 
@@ -44,10 +45,20 @@ export function vatField({ config = {}, overrides = {} }: VatFieldProps = {}): F
       name: 'vat',
       type: 'text',
       hooks: {
-        beforeValidate: [({ value }) => normalizeString(value).toUpperCase().replace(/[\s.]/g, '')],
+        beforeValidate: [
+          ({ value }) => {
+            const clean = (val: unknown) =>
+              normalizeString(val).toUpperCase().replace(/[\s.]/g, '');
+
+            if (Array.isArray(value)) {
+              return value.map(clean);
+            }
+            return clean(value);
+          },
+        ],
       },
       label: 'VAT Number',
-      validate: (value, args) => {
+      validate: validateWithHasMany((value, args) => {
         const result = text(value, args);
         if (result !== true) {
           return result;
@@ -57,13 +68,13 @@ export function vatField({ config = {}, overrides = {} }: VatFieldProps = {}): F
           return true;
         }
 
-        const checkResult = checkVAT(value, config.countries || countries);
+        const checkResult = checkVAT(value as string, config.countries || countries);
         if (!checkResult.isValid) {
           return 'Invalid VAT number';
         }
 
         return true;
-      },
+      }),
     } satisfies VatTextField,
     overrides
   );

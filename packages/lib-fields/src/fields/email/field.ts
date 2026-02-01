@@ -2,6 +2,8 @@ import type { EmailField, Field } from 'payload';
 import { deepMerge } from 'payload';
 import { email } from 'payload/shared';
 
+import { validateWithHasMany } from '../../utils/validation.js';
+
 export type EmailFieldOverrides = Partial<Omit<EmailField, 'type'>>;
 
 /**
@@ -55,6 +57,9 @@ export function emailField({ config = {}, overrides = {} }: EmailFieldProps = {}
       hooks: {
         beforeValidate: [
           ({ value }) => {
+            if (Array.isArray(value)) {
+              return value.map((v) => (typeof v === 'string' ? v.toLowerCase().trim() : v));
+            }
             if (typeof value === 'string') {
               return value.toLowerCase().trim();
             }
@@ -62,7 +67,7 @@ export function emailField({ config = {}, overrides = {} }: EmailFieldProps = {}
           },
         ],
       },
-      validate: (value, args) => {
+      validate: validateWithHasMany((value, args) => {
         // First run standard email validation
         const isValidEmail = email(value, args);
         if (isValidEmail !== true) {
@@ -82,7 +87,7 @@ export function emailField({ config = {}, overrides = {} }: EmailFieldProps = {}
         }
 
         return `Email must be from one of the following domains: ${validDomains.join(', ')}`;
-      },
+      }),
     } satisfies EmailField,
     overrides
   );

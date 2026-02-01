@@ -2,6 +2,7 @@ import type { Field, TextField } from 'payload';
 import { deepMerge } from 'payload';
 
 import { type GenerateIDOptions, type IDType, ID_PATTERNS, generateId } from '../../utils/id.js';
+import { validateWithHasMany } from '../../utils/validation.js';
 
 export type IDFieldOverrides = Partial<Omit<TextField, 'type'>>;
 
@@ -84,7 +85,7 @@ export function idField({ config = {}, overrides = {} }: IDFieldProps = {}): Fie
       },
       index: true,
       label: 'ID',
-      validate: (value) => {
+      validate: validateWithHasMany((value) => {
         if (!value) {
           return true;
         }
@@ -105,7 +106,7 @@ export function idField({ config = {}, overrides = {} }: IDFieldProps = {}): Fie
         }
 
         return true;
-      },
+      }),
     } satisfies TextField,
     overrides
   );

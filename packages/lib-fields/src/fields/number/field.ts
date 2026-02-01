@@ -1,6 +1,8 @@
 import type { Field, NumberField } from 'payload';
 import { deepMerge } from 'payload';
+import { number } from 'payload/shared';
 
+import { validateWithHasMany } from '../../utils/validation.js';
 import type { NumberFieldConfig } from './types.js';
 
 export type { NumberFieldConfig };
@@ -76,6 +78,30 @@ export function numberField({ config = {}, overrides = {} }: NumberFieldProps = 
       },
       max,
       min,
+      validate: validateWithHasMany((value, args) => {
+        // Standard payload number validation (min/max/required)
+        const result = number(value, args);
+        if (result !== true) {
+          return result;
+        }
+
+        if (typeof value !== 'number') {
+          return true;
+        }
+
+        // Decimal scale validation
+        if (decimalScale !== undefined) {
+          const stringValue = value.toString();
+          if (stringValue.includes('.')) {
+            const decimals = stringValue.split('.')[1].length;
+            if (decimals > decimalScale) {
+              return `Value cannot have more than ${decimalScale} decimal places.`;
+            }
+          }
+        }
+
+        return true;
+      }),
     } satisfies NumberField,
     overrides
   );

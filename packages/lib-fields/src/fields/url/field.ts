@@ -3,6 +3,7 @@ import { deepMerge } from 'payload';
 import { text } from 'payload/shared';
 
 import { normalizeString } from '../../utils/normalization.js';
+import { validateWithHasMany } from '../../utils/validation.js';
 import { type URLType, getURLConfig } from './defaults.js';
 
 export type URLFieldOverrides = Partial<Omit<TextField, 'type'>>;
@@ -62,22 +63,29 @@ export function urlField({ config = {}, overrides = {} }: URLFieldProps = {}): F
       hooks: {
         beforeValidate: [
           ({ value }) => {
-            let normalized = normalizeString(value);
+            const format = (val: unknown) => {
+              let normalized = normalizeString(val);
 
-            if (normalized) {
-              if (!normalized.startsWith('http')) {
-                normalized = `${https ? 'https' : 'http'}://${normalized}`;
-              } else if (https && normalized.startsWith('http://')) {
-                normalized = normalized.replace(/^http:\/\//, 'https://');
+              if (normalized) {
+                if (!normalized.startsWith('http')) {
+                  normalized = `${https ? 'https' : 'http'}://${normalized}`;
+                } else if (https && normalized.startsWith('http://')) {
+                  normalized = normalized.replace(/^http:\/\//, 'https://');
+                }
               }
-            }
 
-            return normalized;
+              return normalized;
+            };
+
+            if (Array.isArray(value)) {
+              return value.map(format);
+            }
+            return format(value);
           },
         ],
       },
       label: resolvedConfig.label,
-      validate: async (val, args) => {
+      validate: validateWithHasMany(async (val, args) => {
         // Run standard Payload text validation first
         const result = await text(val, args);
         if (result !== true) {
@@ -98,7 +106,7 @@ export function urlField({ config = {}, overrides = {} }: URLFieldProps = {}): F
         }
 
         return true;
-      },
+      }),
     } satisfies TextField,
     overrides
   );

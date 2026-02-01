@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { urlField } from './field.js';
 
 type SingleTextField = Extract<TextField, { hasMany?: false | undefined }>;
+type ManyTextField = Extract<TextField, { hasMany: true }>;
 
 const mockArgs = {
   req: {
@@ -153,5 +154,43 @@ describe('urlField', () => {
 
     expect(await field.validate!('123', mockArgs)).toBe(true);
     expect(typeof (await field.validate!('abc', mockArgs))).toBe('string');
+  });
+
+  const mockArgsMany = mockArgs as unknown as ValidateOptions<
+    unknown,
+    unknown,
+    TextField,
+    string[]
+  >;
+
+  describe('hasMany support', () => {
+    it('should validate an array of URLs', async () => {
+      const fields = urlField({ overrides: { hasMany: true } });
+      const field = fields[0] as ManyTextField;
+
+      const validUrls = ['https://google.com', 'https://example.com'];
+      expect(await field.validate!(validUrls, mockArgsMany)).toBe(true);
+    });
+
+    it('should fail validation if one URL in array is invalid', async () => {
+      const fields = urlField({ overrides: { hasMany: true } });
+      const field = fields[0] as ManyTextField;
+
+      const mixedUrls = ['https://google.com', 'invalid-url'];
+      // validateWithHasMany runs validation on each item; if any fail, it returns the error string.
+      const result = await field.validate!(mixedUrls, mockArgsMany);
+      expect(typeof result).toBe('string');
+    });
+
+    it('should format all URLs in beforeValidate hook', () => {
+      const fields = urlField({ config: { https: true }, overrides: { hasMany: true } });
+      const field = fields[0] as ManyTextField;
+      const hook = field.hooks?.beforeValidate?.[0];
+
+      const input = ['google.com', 'http://example.com'];
+      const expected = ['https://google.com', 'https://example.com'];
+
+      expect(hook?.({ value: input } as FieldHookArgs)).toEqual(expected);
+    });
   });
 });

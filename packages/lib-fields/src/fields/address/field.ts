@@ -75,7 +75,7 @@ export function addressField({ config = {}, overrides = {} }: AddressFieldProps 
             validate: (val, args) => text(val, args),
           } satisfies TextField,
           overrides.line1 || {}
-        ),
+        ) as TextField,
         deepMerge<TextField, AddressLine2Overrides>(
           {
             name: 'line2',
@@ -87,7 +87,7 @@ export function addressField({ config = {}, overrides = {} }: AddressFieldProps 
             validate: (val, args) => text(val, args),
           } satisfies TextField,
           overrides.line2 || {}
-        ),
+        ) as TextField,
         deepMerge<TextField, AddressCityOverrides>(
           {
             name: 'city',
@@ -100,7 +100,7 @@ export function addressField({ config = {}, overrides = {} }: AddressFieldProps 
             validate: (val, args) => text(val, args),
           } satisfies TextField,
           overrides.city || {}
-        ),
+        ) as TextField,
         deepMerge<TextField, AddressStateOverrides>(
           {
             name: 'state',
@@ -112,7 +112,7 @@ export function addressField({ config = {}, overrides = {} }: AddressFieldProps 
             validate: (val, args) => text(val, args),
           } satisfies TextField,
           overrides.state || {}
-        ),
+        ) as TextField,
         deepMerge<TextField, AddressZipOverrides>(
           {
             name: 'zip',
@@ -125,7 +125,7 @@ export function addressField({ config = {}, overrides = {} }: AddressFieldProps 
             validate: (val, args) => text(val, args),
           } satisfies TextField,
           overrides.zip || {}
-        ),
+        ) as TextField,
         ...countryField({
           config: config.country,
           overrides: {
@@ -138,7 +138,7 @@ export function addressField({ config = {}, overrides = {} }: AddressFieldProps 
       label: 'Address',
     } satisfies NamedGroupField,
     overrides.address || {}
-  );
+  ) as NamedGroupField;
 
   return [addressGroupField];
 }

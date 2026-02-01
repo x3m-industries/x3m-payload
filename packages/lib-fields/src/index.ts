@@ -9,3 +9,4 @@ export * from './fields/url/field.js';
 export * from './fields/vat/field.js';
 export * from './utils/id.js';
 export * from './utils/normalization.js';
+export * from './utils/validation.js';

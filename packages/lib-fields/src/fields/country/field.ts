@@ -4,6 +4,8 @@ import { text } from 'payload/shared';
 
 import { type TCountryCode, countries } from 'countries-list';
 
+import { validateWithHasMany } from '../../utils/validation.js';
+
 export type CountryFieldOverrides = Partial<Omit<TextField, 'type'>>;
 
 export interface CountryFieldConfig {
@@ -46,17 +48,23 @@ export function countryField({ config = {}, overrides = {} }: CountryFieldProps 
       hooks: {
         beforeValidate: [
           ({ value }) => {
-            if (!value || typeof value !== 'string') {
-              return value;
-            }
+            const format = (val: unknown) => {
+              if (!val || typeof val !== 'string') {
+                return val;
+              }
+              // Simple cleanup: uppercase and trim.
+              return val.trim().toUpperCase();
+            };
 
-            // Simple cleanup: uppercase and trim.
-            return value.trim().toUpperCase();
+            if (Array.isArray(value)) {
+              return value.map(format);
+            }
+            return format(value);
           },
         ],
       },
       label: 'Country',
-      validate: (value, args) => {
+      validate: validateWithHasMany((value, args) => {
         const result = text(value, args);
         if (result !== true) {
           return result;
@@ -77,7 +85,7 @@ export function countryField({ config = {}, overrides = {} }: CountryFieldProps 
         }
 
         return true;
-      },
+      }),
     } satisfies CountryTextField,
     overrides
   );

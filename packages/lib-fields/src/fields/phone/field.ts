@@ -8,6 +8,7 @@ import parsePhoneNumberFromString, {
 } from 'libphonenumber-js';
 
 import { normalizeString } from '../../utils/normalization.js';
+import { validateWithHasMany } from '../../utils/validation.js';
 
 export type PhoneFieldOverrides = Partial<Omit<TextField, 'type'>>;
 
@@ -51,17 +52,28 @@ export function phoneField({ config = {}, overrides = {} }: PhoneFieldProps = {}
       hooks: {
         beforeValidate: [
           ({ value }) => {
-            const normalizedValue = normalizeString(value).replace(/^00/, '+');
-            const phoneNumber = parsePhoneNumberFromString(normalizedValue, config.defaultCountry);
-            if (phoneNumber) {
-              return phoneNumber.formatInternational();
+            const format = (val: unknown) => {
+              // Normalize first (handling null/undefined/non-string via normalizeString logic if consistent with original)
+              const normalizedValue = normalizeString(val).replace(/^00/, '+');
+              const phoneNumber = parsePhoneNumberFromString(
+                normalizedValue,
+                config.defaultCountry
+              );
+              if (phoneNumber) {
+                return phoneNumber.formatInternational();
+              }
+              return normalizedValue;
+            };
+
+            if (Array.isArray(value)) {
+              return value.map(format);
             }
-            return normalizedValue;
+            return format(value);
           },
         ],
       },
       label: 'Phone',
-      validate: (value, args) => {
+      validate: validateWithHasMany((value, args) => {
         const result = text(value, args);
         if (result !== true) {
           return result;
@@ -76,7 +88,7 @@ export function phoneField({ config = {}, overrides = {} }: PhoneFieldProps = {}
         }
 
         return true;
-      },
+      }),
     } satisfies PhoneTextField,
     overrides
   );

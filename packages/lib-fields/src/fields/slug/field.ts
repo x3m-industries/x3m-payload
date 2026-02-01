@@ -3,6 +3,7 @@ import { deepMerge } from 'payload';
 import { text } from 'payload/shared';
 
 import { createSlugFromFields, generateUniqueSlug } from '../../utils/slug.js';
+import { validateWithHasMany } from '../../utils/validation.js';
 
 export type SlugFieldOverrides = Partial<Omit<TextField, 'type'>>;
 
@@ -82,6 +83,12 @@ export function slugField({ config = {}, overrides = {} }: SlugFieldProps = {}):
             // Check if locked (synced). Default to true if not found (e.g. on create)
             const isLocked = siblingData?.[checkboxName] !== false;
 
+            // If value is an array (hasMany), we skip auto-generation logic as it assumes a single string relationship.
+            // We treat hasMany slugs as manually managed lists.
+            if (Array.isArray(value)) {
+              return value;
+            }
+
             // If unlocked (manual), bypass auto-generation completely.
             // User decides the value.
             if (!isLocked) {
@@ -124,7 +131,7 @@ export function slugField({ config = {}, overrides = {} }: SlugFieldProps = {}):
       },
       index: true,
       label: 'Slug',
-      validate: (val, args) => text(val, args),
+      validate: validateWithHasMany((val, args) => text(val, args)),
     } satisfies TextField,
     overrides
   );
