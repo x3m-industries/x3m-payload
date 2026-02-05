@@ -6,17 +6,24 @@
 
 **The missing pieces for Payload CMS.** Type-safe services, production-ready fields, zero boilerplate.
 
+> [!TIP]
+> **Built for Payload 3.0+ and Next.js App Router.**
+> Fully compatible with the new server-only architecture.
+
+![VS Code Autocomplete Demo](/docs/assets/autocomplete-demo.gif)
+_See the magic: Full TypeScript autocomplete for your entire backend logic._
+
 ---
 
 ## Why This Exists
 
-Every Payload project ends up with the same problems:
+Every Payload 3.0 project ends up with the same problems:
 
-❌ **Unsafe API calls** — Magic strings everywhere, no autocomplete  
-❌ **Custom field validation** — Rewriting phone/VAT/address logic for the 10th time  
-❌ **Scattered business logic** — Service methods spread across random files
+❌ **Unsafe API calls** — `payload.find({ collection: 'orders' })` is just a magic string.  
+❌ **Manual Validation** — Rewriting generic phone/VAT/address regexes for every client.  
+❌ **Scattered Logic** — Service methods spread across 'utilities' folders with no structure.
 
-**This toolkit solves all three.**
+**This toolkit solves all three.** It brings the structure of NestJS to the flexibility of Payload.
 
 ---
 

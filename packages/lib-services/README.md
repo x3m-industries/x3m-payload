@@ -6,6 +6,8 @@
 
 Type-safe service factory for interacting with Payload CMS collections and globals.
 
+> **Need better fields?** Check out [@x3m-industries/lib-fields](../lib-fields/README.md) for production-ready phone, VAT, and ID fields.
+
 ## Features
 
 - **Type-safe Wrappers**: Wraps Payload's Local API with strict typing for specific collections and globals.

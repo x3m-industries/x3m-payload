@@ -2,6 +2,8 @@
 
 A collection of high-quality, pre-configured fields for Payload CMS.
 
+> **Need type-safe services?** Check out [@x3m-industries/lib-services](../lib-services/README.md) for fully typed local API wrappers.
+
 ## Features
 
 - **Number Field**: Validates numbers with min/max constraints and formatting (prefix, suffix, thousand separator)

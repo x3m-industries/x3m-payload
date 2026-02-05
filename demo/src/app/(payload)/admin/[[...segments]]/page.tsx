@@ -16,10 +16,18 @@ type Args = {
   }>;
 };
 
-export const generateMetadata = ({ params, searchParams }: Args): Promise<Metadata> =>
-  generatePageMetadata({ config, params, searchParams });
+import { Suspense } from 'react';
+import { cookies } from 'next/headers';
 
-const Page = ({ params, searchParams }: Args) =>
-  RootPage({ config, importMap, params, searchParams });
+export const generateMetadata = async ({ params, searchParams }: Args): Promise<Metadata> => {
+  await cookies();
+  return generatePageMetadata({ config, params, searchParams });
+};
+
+const Page = ({ params, searchParams }: Args) => (
+  <Suspense fallback={null}>
+    <RootPage config={config} importMap={importMap} params={params} searchParams={searchParams} />
+  </Suspense>
+);
 
 export default Page;
