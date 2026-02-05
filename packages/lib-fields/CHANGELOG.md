@@ -1,5 +1,13 @@
 # @x3m-industries/lib-fields
 
+## 2.1.3
+
+### Patch Changes
+
+- 42f76d5: fix: rebuild packages with dist folder
+
+  This release includes the compiled dist folder that was missing from previous versions.
+
 ## 2.1.2
 
 ### Patch Changes
