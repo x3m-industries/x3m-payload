@@ -2,7 +2,12 @@ import type { GlobalSlug, Payload } from 'payload';
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { cachedFn } from '../cache/cache-wrapper.js';
 import { createGlobalService } from './global-service.js';
+
+vi.mock('../cache/cache-wrapper.js', () => ({
+  cachedFn: vi.fn((fn) => fn()),
+}));
 
 describe('createGlobalService', () => {
   const mockPayload = {
@@ -144,6 +149,49 @@ describe('createGlobalService', () => {
       expect(service.findOne).toBeDefined();
       expect(service.updateOne).toBeDefined();
       expect((service as Record<string, unknown>).customMethod).toBeDefined();
+    });
+  });
+
+  describe('Disable Default Methods', () => {
+    it('should not expose disabled methods', () => {
+      const service = createGlobalService({
+        disable: ['findOne'],
+        getPayload,
+        global,
+      });
+
+      expect((service as any).findOne).toBeUndefined();
+      expect(service.updateOne).toBeDefined();
+    });
+  });
+
+  describe('Caching', () => {
+    it('should use cachedFn when caching is enabled', async () => {
+      const service = createGlobalService({
+        cache: { findOne: { life: 'minutes' } },
+        getPayload,
+        global,
+      });
+
+      vi.mocked(mockPayload.findGlobal).mockResolvedValue({} as any);
+
+      await service.findOne();
+
+      expect(cachedFn).toHaveBeenCalledWith(expect.any(Function), { life: 'minutes' });
+    });
+
+    it('should bypass cache when configured', async () => {
+      const service = createGlobalService({
+        cache: { findOne: true },
+        getPayload,
+        global,
+      });
+
+      vi.mocked(mockPayload.findGlobal).mockResolvedValue({} as any);
+
+      vi.clearAllMocks();
+      await service.findOne({ cache: false });
+      expect(cachedFn).not.toHaveBeenCalled();
     });
   });
 });

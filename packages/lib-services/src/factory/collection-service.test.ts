@@ -4,7 +4,12 @@ import type { CollectionSlug, Payload } from 'payload';
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { cachedFn } from '../cache/cache-wrapper.js';
 import { createCollectionService } from './collection-service.js';
+
+vi.mock('../cache/cache-wrapper.js', () => ({
+  cachedFn: vi.fn((fn) => fn()),
+}));
 
 describe('createCollectionService', () => {
   const mockPayload = {
@@ -414,6 +419,42 @@ describe('createCollectionService', () => {
       expect(service.findMany).toBeDefined();
       expect(service.findOneById).toBeDefined();
       expect(service.updateOneById).toBeDefined();
+    });
+  });
+
+  describe('Caching', () => {
+    it('should use cachedFn when caching is enabled', async () => {
+      const service = createCollectionService({
+        cache: { findMany: { life: 'seconds' } },
+        collection,
+        getPayload,
+      });
+
+      vi.mocked(mockPayload.find).mockResolvedValue({ docs: [] } as any);
+
+      await service.findMany();
+
+      expect(cachedFn).toHaveBeenCalledWith(expect.any(Function), { life: 'seconds' });
+    });
+
+    it('should bypass cache when configured', async () => {
+      const service = createCollectionService({
+        cache: { findMany: true },
+        collection,
+        getPayload,
+      });
+
+      vi.mocked(mockPayload.find).mockResolvedValue({ docs: [] } as any);
+
+      await service.findMany({ cache: false });
+
+      // Should call function directly, not via cachedFn
+      // Since our mock implementation of cachedFn calls the function immediately,
+      // we need to rely on checking if cachedFn was called 2nd time (it shouldn't be for this test)
+      // A better way is to clear mocks before this test
+      vi.clearAllMocks();
+      await service.findMany({ cache: false });
+      expect(cachedFn).not.toHaveBeenCalled();
     });
   });
 });

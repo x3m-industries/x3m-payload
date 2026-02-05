@@ -7,6 +7,8 @@ import { type Country, checkVAT, countries } from 'jsvat';
 import { normalizeString } from '../../utils/normalization.js';
 import { validateWithHasMany } from '../../utils/validation.js';
 
+const CLEAN_REGEX = /[\s.]/g;
+
 export type VatFieldOverrides = Partial<Omit<TextField, 'type'>>;
 
 export interface VatFieldConfig {
@@ -48,7 +50,7 @@ export function vatField({ config = {}, overrides = {} }: VatFieldProps = {}): F
         beforeValidate: [
           ({ value }) => {
             const clean = (val: unknown) =>
-              normalizeString(val).toUpperCase().replace(/[\s.]/g, '');
+              normalizeString(val).toUpperCase().replace(CLEAN_REGEX, '');
 
             if (Array.isArray(value)) {
               return value.map(clean);
