@@ -91,6 +91,24 @@ describe('createGlobalService', () => {
           expect(mockPayload.updateGlobal).toHaveBeenCalledWith(expectedArgs);
         }
       );
+
+      it('should fail if getPayload fails', async () => {
+        const error = new Error('Payload error');
+        getPayload.mockRejectedValueOnce(error);
+
+        await expect(
+          service.updateOne({ data: { theme: 'dark' } } as Parameters<typeof service.updateOne>[0])
+        ).rejects.toThrow(error);
+      });
+
+      it('should fail if payload.updateGlobal fails', async () => {
+        const error = new Error('UpdateGlobal error');
+        vi.mocked(mockPayload.updateGlobal).mockRejectedValueOnce(error);
+
+        await expect(
+          service.updateOne({ data: { theme: 'dark' } } as Parameters<typeof service.updateOne>[0])
+        ).rejects.toThrow(error);
+      });
     });
   });
 

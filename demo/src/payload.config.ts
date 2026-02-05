@@ -6,6 +6,8 @@ import path from 'path';
 import sharp from 'sharp';
 import { fileURLToPath } from 'url';
 
+import { servicesPlugin } from '@x3m-industries/lib-services';
+
 import { AllFields } from './collections/AllFields';
 import { Todos } from './collections/Todos';
 import { seed } from './seed';
@@ -36,6 +38,7 @@ export default buildConfig({
       },
     },
   ],
+  plugins: [servicesPlugin()],
   db: mongooseAdapter({
     url: process.env.DATABASE_URL || 'mongodb://localhost:27017/x3m-demo',
   }),

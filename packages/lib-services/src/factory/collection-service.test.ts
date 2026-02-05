@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/unbound-method */
 import type { CollectionSlug, Payload } from 'payload';
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -6,9 +8,12 @@ import { createCollectionService } from './collection-service.js';
 
 describe('createCollectionService', () => {
   const mockPayload = {
+    count: vi.fn(),
     create: vi.fn(),
+    delete: vi.fn(),
     find: vi.fn(),
     findByID: vi.fn(),
+    update: vi.fn(),
   } as unknown as Payload;
 
   const getPayload = vi.fn().mockResolvedValue(mockPayload);
@@ -80,6 +85,38 @@ describe('createCollectionService', () => {
       });
     });
 
+    describe('countMany', () => {
+      it('should count documents without params', async () => {
+        vi.mocked(mockPayload.count).mockResolvedValue({ totalDocs: 5 });
+
+        const result = await service.countMany();
+
+        expect(result).toEqual({ totalDocs: 5 });
+        expect(mockPayload.count).toHaveBeenCalledWith({ collection });
+      });
+
+      it('should count documents with where clause', async () => {
+        vi.mocked(mockPayload.count).mockResolvedValue({ totalDocs: 2 });
+
+        const result = await service.countMany({
+          where: { email: { equals: 'test@example.com' } },
+        });
+
+        expect(result).toEqual({ totalDocs: 2 });
+        expect(mockPayload.count).toHaveBeenCalledWith({
+          collection,
+          where: { email: { equals: 'test@example.com' } },
+        });
+      });
+
+      it('should fail if getPayload fails', async () => {
+        const error = new Error('Payload error');
+        getPayload.mockRejectedValueOnce(error);
+
+        await expect(service.countMany()).rejects.toThrow(error);
+      });
+    });
+
     describe('findMany', () => {
       const testCases = [
         {
@@ -148,7 +185,7 @@ describe('createCollectionService', () => {
       );
     });
 
-    describe('findOneByID', () => {
+    describe('findOneById', () => {
       const testCases = [
         {
           name: 'happy path',
@@ -167,12 +204,143 @@ describe('createCollectionService', () => {
         async ({ expectedArgs, expectedResult, mockResponse, params }) => {
           vi.mocked(mockPayload.findByID).mockResolvedValue(mockResponse);
 
-          const result = await service.findOneByID(params as never);
+          const result = await service.findOneById(params as never);
 
           expect(result).toEqual(expectedResult);
           expect(mockPayload.findByID).toHaveBeenCalledWith(expectedArgs);
         }
       );
+
+      it('should fail if getPayload fails', async () => {
+        const error = new Error('Payload error');
+        getPayload.mockRejectedValueOnce(error);
+
+        await expect(service.findOneById({ id: '1' })).rejects.toThrow(error);
+      });
+
+      it('should fail if payload.findByID fails', async () => {
+        const error = new Error('FindByID error');
+        vi.mocked(mockPayload.findByID).mockRejectedValueOnce(error);
+
+        await expect(service.findOneById({ id: '1' })).rejects.toThrow(error);
+      });
+    });
+
+    describe('existsById', () => {
+      it('should return true when document exists', async () => {
+        vi.mocked(mockPayload.findByID).mockResolvedValue({ id: '1' });
+
+        const result = await service.existsById({ id: '1' });
+
+        expect(result).toBe(true);
+        expect(mockPayload.findByID).toHaveBeenCalledWith({ id: '1', collection });
+      });
+
+      it('should return false when document does not exist', async () => {
+        vi.mocked(mockPayload.findByID).mockRejectedValue(new Error('Not found'));
+
+        const result = await service.existsById({ id: 'nonexistent' });
+
+        expect(result).toBe(false);
+      });
+
+      it('should fail if getPayload fails', async () => {
+        const error = new Error('Payload error');
+        getPayload.mockRejectedValueOnce(error);
+
+        await expect(service.existsById({ id: '1' })).rejects.toThrow(error);
+      });
+    });
+
+    describe('updateOneById', () => {
+      const testCases = [
+        {
+          name: 'happy path',
+          expectedArgs: {
+            id: '1',
+            collection,
+            data: { email: 'updated@example.com' },
+          },
+          expectedResult: { id: '1', email: 'updated@example.com' },
+          mockResponse: { id: '1', email: 'updated@example.com' },
+          params: { id: '1', data: { email: 'updated@example.com' } },
+        },
+      ];
+
+      it.each(testCases)(
+        '$name',
+        async ({ expectedArgs, expectedResult, mockResponse, params }) => {
+          vi.mocked(mockPayload.update).mockResolvedValue(mockResponse);
+
+          const result = await service.updateOneById(params as never);
+
+          expect(result).toEqual(expectedResult);
+          expect(mockPayload.update).toHaveBeenCalledWith(expectedArgs);
+        }
+      );
+
+      it('should fail if getPayload fails', async () => {
+        const error = new Error('Payload error');
+        getPayload.mockRejectedValueOnce(error);
+
+        await expect(
+          service.updateOneById({ id: '1', data: {} } as Parameters<
+            typeof service.updateOneById
+          >[0])
+        ).rejects.toThrow(error);
+      });
+
+      it('should fail if payload.update fails', async () => {
+        const error = new Error('Update error');
+        vi.mocked(mockPayload.update).mockRejectedValueOnce(error);
+
+        await expect(
+          service.updateOneById({ id: '1', data: {} } as Parameters<
+            typeof service.updateOneById
+          >[0])
+        ).rejects.toThrow(error);
+      });
+    });
+
+    describe('deleteOneById', () => {
+      const testCases = [
+        {
+          name: 'happy path',
+          expectedArgs: {
+            id: '1',
+            collection,
+          },
+          expectedResult: { id: '1' },
+          mockResponse: { id: '1' },
+          params: { id: '1' },
+        },
+      ];
+
+      it.each(testCases)(
+        '$name',
+        async ({ expectedArgs, expectedResult, mockResponse, params }) => {
+          vi.mocked(mockPayload.delete).mockResolvedValue(mockResponse as never);
+
+          const result = await service.deleteOneById(params as never);
+
+          expect(result).toEqual(expectedResult);
+          expect(mockPayload.delete).toHaveBeenCalledWith(expectedArgs);
+        }
+      );
+
+      it('should fail if getPayload fails', async () => {
+        const error = new Error('Payload error');
+        getPayload.mockRejectedValueOnce(error);
+
+        await expect(service.deleteOneById({ id: '1' })).rejects.toThrow(error);
+      });
+
+      it('should fail if payload.delete fails', async () => {
+        const error = new Error('Delete error');
+        vi.mocked(mockPayload.delete).mockRejectedValueOnce(error);
+
+        await expect(service.deleteOneById({ id: '1' })).rejects.toThrow(error);
+      });
     });
   });
 
@@ -207,8 +375,45 @@ describe('createCollectionService', () => {
 
       expect(service.createOne).toBeDefined();
       expect(service.findMany).toBeDefined();
-      expect(service.findOneByID).toBeDefined();
+      expect(service.findOneById).toBeDefined();
+      expect(service.existsById).toBeDefined();
+      expect(service.countMany).toBeDefined();
       expect((service as Record<string, unknown>).customMethod).toBeDefined();
+    });
+
+    it('should allow extensions to override default methods', async () => {
+      const customFindMany = vi.fn().mockResolvedValue({ custom: true, docs: [] });
+
+      const service = createCollectionService({
+        collection,
+        extensions: () => ({
+          findMany: customFindMany,
+        }),
+        getPayload,
+      });
+
+      const result = await service.findMany({});
+
+      expect(result).toEqual({ custom: true, docs: [] });
+      expect(customFindMany).toHaveBeenCalled();
+      // Default payload.find should NOT be called since we overrode it
+      expect(mockPayload.find).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Disable Default Methods', () => {
+    it('should not expose disabled methods', () => {
+      const service = createCollectionService({
+        collection,
+        disable: ['createOne', 'deleteOneById'],
+        getPayload,
+      });
+
+      expect((service as any).createOne).toBeUndefined();
+      expect((service as any).deleteOneById).toBeUndefined();
+      expect(service.findMany).toBeDefined();
+      expect(service.findOneById).toBeDefined();
+      expect(service.updateOneById).toBeDefined();
     });
   });
 });

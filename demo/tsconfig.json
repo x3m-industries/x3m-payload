@@ -12,7 +12,8 @@
     "moduleResolution": "bundler",
     "noEmit": true,
     "paths": {
-      "@payload-config": ["./src/payload.config.ts"]
+      "@payload-config": ["./src/payload.config.ts"],
+      "@payload-types": ["./src/payload-types.ts"]
     },
     "plugins": [
       {

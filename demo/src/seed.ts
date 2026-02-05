@@ -17,5 +17,16 @@ export const seed = async (payload: Payload) => {
       collection: 'users',
       data: devUser,
     });
+
+    // Create a demo todo using the new service structure if collection exists
+    if (payload.collections['todos']) {
+      await payload.create({
+        collection: 'todos',
+        data: {
+          title: 'Check out the new Plugin Mode!',
+          completed: false,
+        },
+      });
+    }
   }
 };
