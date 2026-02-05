@@ -1,5 +1,11 @@
 # @x3m-industries/lib-fields
 
+## 2.1.1
+
+### Patch Changes
+
+- e5c3195: Improve Developer Experience: Added Code of Conduct, Demo documentation, and Quick Start guide.
+
 ## 2.1.0
 
 ### Minor Changes
