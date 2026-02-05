@@ -77,7 +77,28 @@ New fields in `lib-fields` should:
     ```
 6.  Be exported from `packages/lib-fields/src/index.ts`.
 
-### 4. Agentic Workflow
+### 4. Services & Caching
+
+We use a **Plugin-based Service Architecture** in `lib-services`:
+
+1.  **Usage**: Enable `servicesPlugin()` in Payload config.
+2.  **Caching**: Read operations utilize Next.js `"use cache"`. Configured via `cache` prop:
+    ```typescript
+    service: {
+      cache: { findMany: { life: 'seconds', tags: ['todos'] } }, // Granular
+      // OR
+      cache: true, // Defaults (all methods)
+    }
+    ```
+3.  **Strict Isolation**: Service methods must not import Payload config directly to avoid circular deps.
+4.  **Testing**: Mock the `cachedFn` wrapper when testing services to avoid Next.js runtime errors:
+    ```typescript
+    vi.mock('../cache/cache-wrapper.js', () => ({
+      cachedFn: vi.fn((fn) => fn()),
+    }));
+    ```
+
+### 5. Agentic Workflow
 
 When acting as an AI agent:
 
