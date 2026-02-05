@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "@payloadcms/ui": "^3.74.0",
-    "@types/react": "^19.2.10",
+    "@types/react": "^19.2.12",
     "@types/react-dom": "^19.2.3",
     "@vitest/coverage-v8": "^4.0.18",
     "@x3m-industries/lib-eslint": "workspace:*",

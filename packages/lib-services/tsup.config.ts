@@ -4,7 +4,7 @@ export default defineConfig({
   clean: true,
   dts: true,
   entry: ['src/index.ts'],
-  external: ['payload'],
+  external: ['next', 'next/cache', 'payload'],
   format: ['cjs', 'esm'],
   sourcemap: true,
   treeshake: true,

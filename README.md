@@ -1,145 +1,165 @@
 # @x3m-industries/payload
 
-[![codecov](https://codecov.io/gh/x3m-industries/x3m-payload/graph/badge.svg?token=CODECOV_TOKEN)](https://codecov.io/gh/x3m-industries/x3m-payload)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Turborepo](https://img.shields.io/badge/built%20with-turborepo-ef4045)](https://turbo.build/repo)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
+[![Payload CMS](https://img.shields.io/badge/Payload%20CMS-3.x-purple.svg)](https://payloadcms.com/)
 
-payloadx3m
-**The Ultimate Payload CMS Utility Belt for High-Performance Teams.** 🚀
-
-A battle-tested monorepo containing a suite of robust fields, type-safe global services, and essential utilities designed to supercharge your [Payload CMS](https://payloadcms.com) development. Stop rewriting boilerplate and start building features.
+**The missing pieces for Payload CMS.** Type-safe services, production-ready fields, zero boilerplate.
 
 ---
 
-## ⚡️ Why x3m-payload?
+## Why This Exists
 
-- **🛡️ Production-Ready Fields:** Don't reinvent the wheel. Use our pre-validated fields for VAT (EU), International Phone Numbers, Addresses, Slugs, and more.
-- **🔌 Type-Safe Service Factory:** Generate fully typed Local API services for your Collections and Globals in seconds. No more magic strings or unsafe casting.
-- **🚀 Scalable Architecture:** Built on a modern Turborepo stack, optimized for DX and performance.
-- **✅ Strictly Typed:** 100% TypeScript. We don't just "support" types; we enforce them.
+Every Payload project ends up with the same problems:
 
----
+❌ **Unsafe API calls** — Magic strings everywhere, no autocomplete  
+❌ **Custom field validation** — Rewriting phone/VAT/address logic for the 10th time  
+❌ **Scattered business logic** — Service methods spread across random files
 
-## 📦 The Toolkit
-
-### 1. [@x3m-industries/lib-fields](./packages/lib-fields)
-
-_The fields you wish Payload came with by default._
-
-Stop worrying about validation regexes and formatting logic.
-
-- **`idField`**: Smart, auto-generated IDs with prefixing support. Types: `uuid`, `uuidv7`, `nanoid`, `ulid`, `cuid2`, `custom`.
-- **`phoneField`**: Parsing, validation, and formatting for international numbers (based on `libphonenumber-js`).
-- **`vatField`**: EU VAT number validation with format and checksum validation.
-- **`slugField`**: Automatic, localized slug generation with locking mechanisms.
-- **`addressField`**: A complete address group including street, city, state, zip, and country.
-- **`countryField`**: A select field with a pre-filled list of all countries.
-- **`emailField`**: Email validation with options to restrict specific domains.
-- **`urlField`**: URL validation with protocol enforcement (http/https).
-- **`numberField`**: Numeric field with formatting options.
-
-### 2. [@x3m-industries/lib-services](./packages/lib-services)
-
-_The missing link between your custom code and Payload's Local API._
-
-Instantly generate type-safe CRUD services for your collections and globals.
-
-- **Generic Collection Service**: `findMany`, `findOneByID`, `createOne` — all strongly typed to your Payload Config.
-- **Global Service**: strict access to your Globals.
-- **Error Handling**: Standardized error wrapping and query suggestions.
+**This toolkit solves all three.**
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Demo)
 
-### Installation
+Want to see it in action? Run the local demo in 2 minutes.
 
 ```bash
-yarn add @x3m-industries/lib-fields @x3m-industries/lib-services
+# 1. Clone the repo
+git clone https://github.com/x3m-industries/x3m-payload.git
+cd x3m-payload
+
+# 2. Install dependencies
+yarn install
+
+# 3. Start the demo
+yarn demo
 ```
 
-### Usage Examples
+Open [http://localhost:3000](http://localhost:3000) to explore the admin UI and frontend.
 
-#### Adding Supercharged Fields
+---
+
+## 🔌 Plugin Mode: The Game Changer
+
+Define services directly on your collections. Access them from `payload.services`. Fully typed.
 
 ```typescript
-// src/collections/Customers.ts
-import { CollectionConfig } from 'payload';
+// payload.config.ts
+import { servicesPlugin } from '@x3m-industries/lib-services';
 
+export default buildConfig({
+  plugins: [servicesPlugin()],
+  collections: [Orders, Customers],
+  globals: [Settings],
+});
+```
+
+```typescript
+// collections/Orders.ts
+export const Orders: CollectionConfig = {
+  slug: 'orders',
+  fields: [...],
+  service: {
+    extensions: ({ getPayload, collection }) => ({
+      async markShipped({ id }: { id: string }) {
+        const payload = await getPayload();
+        return payload.update({ collection, id, data: { status: 'shipped' } });
+      },
+    }),
+    cache: { findMany: { life: 'hours', tags: ['orders'] } }, // "use cache"
+  },
+};
+```
+
+```typescript
+// collections/Customers.ts
+// Just standard CRUD? No problem.
+export const Customers: CollectionConfig = {
+  slug: 'customers',
+  fields: [...],
+  service: true, // Auto-enable default CRUD service
+};
+```
+
+```typescript
+// Anywhere in your app
+const payload = await getPayloadWithServices(config);
+
+// Default CRUD — fully typed
+await payload.services.orders.findMany({ where: { status: { equals: 'pending' } } });
+await payload.services.orders.findOneById({ id: '123' });
+
+// Custom methods — fully typed
+await payload.services.orders.markShipped({ id: '123' });
+
+// Dynamic access
+await payload.services('orders').createOne({ data: {...} });
+```
+
+**No casting. No magic strings. Full autocomplete.**
+
+---
+
+## 🛡️ Production Fields, Out of the Box
+
+Stop rewriting validation logic. These fields work correctly the first time.
+
+```typescript
 import { addressField, idField, phoneField, vatField } from '@x3m-industries/lib-fields';
 
 export const Customers: CollectionConfig = {
   slug: 'customers',
   fields: [
-    idField({ config: { type: 'uuid' } }),
-    phoneField({ overrides: { name: 'mobile', required: true } }),
-    vatField({ overrides: { name: 'vatNumber' } }),
-    addressField({ overrides: { address: { name: 'billingAddress' } } }),
+    idField({ config: { type: 'uuidv7' } }), // Auto-generated, prefixed IDs
+    phoneField({ overrides: { name: 'mobile' } }), // libphonenumber-js validation
+    vatField({ overrides: { name: 'vatNumber' } }), // EU VAT checksum validation
+    addressField(), // Complete address group
   ],
 };
 ```
 
-#### Creating a Type-Safe Service
+| Field          | What It Does                                           |
+| -------------- | ------------------------------------------------------ |
+| `idField`      | Auto-generated IDs (uuid, uuidv7, nanoid, ulid, cuid2) |
+| `phoneField`   | International phone validation via libphonenumber-js   |
+| `vatField`     | EU VAT validation with format + checksum               |
+| `addressField` | Street, city, state, zip, country — one line           |
+| `slugField`    | Auto-generated slugs with localization + locking       |
+| `emailField`   | Email validation with domain restrictions              |
+| `urlField`     | URL validation with protocol enforcement               |
+| `countryField` | Pre-filled country select                              |
 
-```typescript
-// src/services/customer-service.ts
-import { getPayload } from 'payload';
+---
 
-import config from '@payload-config';
+## 📦 Installation
 
-import { createCollectionService } from '@x3m-industries/lib-services';
+```bash
+# Fields
+yarn add @x3m-industries/lib-fields
 
-export const CustomerService = createCollectionService({
-  collection: 'customers',
-  getPayload: () => getPayload({ config }),
-});
-
-// Usage elsewhere in your app:
-// No more manual "collection: 'customers'" or casting results!
-const unitedStatesCustomers = await CustomerService.findMany({
-  where: {
-    'billingAddress.country': { equals: 'US' },
-  },
-});
+# Services
+yarn add @x3m-industries/lib-services
 ```
+
+---
+
+## 📚 Documentation
+
+Full API documentation in each package:
+
+- **[lib-fields](./packages/lib-fields/README.md)** — Field configuration, validation options, customization
+- **[lib-services](./packages/lib-services/README.md)** — Plugin setup, extensions, disable methods, type safety
 
 ---
 
 ## 🛠️ Development
 
-This repository uses **Yarn** and **Turborepo**.
-
-### Prerequisites
-
-- Node.js (v18+)
-- Yarn (v4.12.0)
-
-### Setup
-
 ```bash
-yarn install
+yarn install      # Install dependencies
+yarn dev          # Development mode
+yarn validate     # Build + lint + typecheck + test
 ```
-
-### Commands
-
-| Command          | Description                                      |
-| :--------------- | :----------------------------------------------- |
-| `yarn dev`       | Start development mode (watch mode + dev server) |
-| `yarn build`     | Build all packages/apps                          |
-| `yarn lint`      | Run ESLint across all packages                   |
-| `yarn typecheck` | Run TypeScript validation                        |
-| `yarn test`      | Run unit tests via Vitest                        |
-
----
-
-## 📦 Publishing
-
-We use **Changesets** for automated semantic versioning.
-
-1.  **Work:** Make your changes.
-2.  **Document:** Run `yarn changeset` to create a release note.
-3.  **Push:** Commit and push.
-4.  **Release:** When the PR is merged, GitHub Actions publishes to npm.
 
 ---
 
