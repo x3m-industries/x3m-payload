@@ -1,4 +1,4 @@
-import { getPayload } from 'payload';
+import { type Payload, type SanitizedConfig, getPayload } from 'payload';
 
 import { describe, expect, it, vi } from 'vitest';
 
@@ -13,9 +13,9 @@ vi.mock('payload', () => ({
 describe('getPayloadWithServices', () => {
   it('should return payload with services type assertion', async () => {
     const mockPayload = { services: {} };
-    vi.mocked(getPayload).mockResolvedValue(mockPayload as any);
+    vi.mocked(getPayload).mockResolvedValue(mockPayload as unknown as Payload);
 
-    const config = Promise.resolve({} as any);
+    const config = Promise.resolve({} as unknown as SanitizedConfig);
     const result = await getPayloadWithServices<ServicesMap>(config);
 
     expect(getPayload).toHaveBeenCalledWith({ config });

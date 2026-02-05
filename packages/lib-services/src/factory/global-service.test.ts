@@ -160,7 +160,7 @@ describe('createGlobalService', () => {
         global,
       });
 
-      expect((service as any).findOne).toBeUndefined();
+      expect((service as Record<string, unknown>).findOne).toBeUndefined();
       expect(service.updateOne).toBeDefined();
     });
   });
@@ -173,7 +173,9 @@ describe('createGlobalService', () => {
         global,
       });
 
-      vi.mocked(mockPayload.findGlobal).mockResolvedValue({} as any);
+      vi.mocked(mockPayload.findGlobal).mockResolvedValue(
+        {} as Awaited<ReturnType<Payload['findGlobal']>>
+      );
 
       await service.findOne();
 
@@ -187,7 +189,9 @@ describe('createGlobalService', () => {
         global,
       });
 
-      vi.mocked(mockPayload.findGlobal).mockResolvedValue({} as any);
+      vi.mocked(mockPayload.findGlobal).mockResolvedValue(
+        {} as Awaited<ReturnType<Payload['findGlobal']>>
+      );
 
       vi.clearAllMocks();
       await service.findOne({ cache: false });
