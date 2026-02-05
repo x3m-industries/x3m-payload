@@ -1,5 +1,14 @@
 # @x3m-industries/lib-fields
 
+## 2.1.2
+
+### Patch Changes
+
+- ae8deed: fix: include dist folder in published packages
+
+  Previously the packages were published without the built dist folder,
+  causing "Cannot find module" errors when importing from npm.
+
 ## 2.1.1
 
 ### Patch Changes
