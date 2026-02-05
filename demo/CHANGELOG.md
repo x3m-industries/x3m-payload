@@ -1,5 +1,13 @@
 # @x3m-industries/demo
 
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies [ae8deed]
+  - @x3m-industries/lib-fields@2.1.2
+  - @x3m-industries/lib-services@2.1.1
+
 ## 0.0.4
 
 ### Patch Changes
