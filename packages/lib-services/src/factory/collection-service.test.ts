@@ -228,20 +228,27 @@ describe('createCollectionService', () => {
 
     describe('existsById', () => {
       it('should return true when document exists', async () => {
-        vi.mocked(mockPayload.findByID).mockResolvedValue({ id: '1' });
+        vi.mocked(mockPayload.count).mockResolvedValue({ totalDocs: 1 });
 
         const result = await service.existsById({ id: '1' });
 
         expect(result).toBe(true);
-        expect(mockPayload.findByID).toHaveBeenCalledWith({ id: '1', collection });
+        expect(mockPayload.count).toHaveBeenCalledWith({
+          collection,
+          where: { id: { equals: '1' } },
+        });
       });
 
       it('should return false when document does not exist', async () => {
-        vi.mocked(mockPayload.findByID).mockRejectedValue(new Error('Not found'));
+        vi.mocked(mockPayload.count).mockResolvedValue({ totalDocs: 0 });
 
         const result = await service.existsById({ id: 'nonexistent' });
 
         expect(result).toBe(false);
+        expect(mockPayload.count).toHaveBeenCalledWith({
+          collection,
+          where: { id: { equals: 'nonexistent' } },
+        });
       });
 
       it('should fail if getPayload fails', async () => {

@@ -193,15 +193,15 @@ export function createCollectionService<
     existsById: async ({ id, cache: bypassCache }: ExistsByIdParams) => {
       const fn = async () => {
         const payload = await props.getPayload();
-        try {
-          await payload.findByID({
-            id,
-            collection: props.collection,
-          });
-          return true;
-        } catch {
-          return false;
-        }
+        const { totalDocs } = await payload.count({
+          collection: props.collection,
+          where: {
+            id: {
+              equals: id,
+            },
+          },
+        });
+        return totalDocs > 0;
       };
       return wrapWithCache('existsById', fn, bypassCache);
     },
