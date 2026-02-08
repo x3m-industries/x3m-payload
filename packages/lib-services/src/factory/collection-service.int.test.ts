@@ -30,16 +30,12 @@ describe('createCollectionService (Integration)', () => {
 
   beforeEach(async () => {
     // Clean up todos between tests
-    const existing = await payload.find({
+    await payload.delete({
       collection: 'todos',
-      limit: 1000,
+      where: {
+        id: { exists: true },
+      },
     });
-    for (const doc of existing.docs) {
-      await payload.delete({
-        id: doc.id,
-        collection: 'todos',
-      });
-    }
   });
 
   describe('CRUD Operations', () => {
