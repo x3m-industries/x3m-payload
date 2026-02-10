@@ -1,5 +1,12 @@
 # @x3m-industries/demo
 
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies [fcc0216]
+  - @x3m-industries/lib-services@2.2.0
+
 ## 0.0.6
 
 ### Patch Changes

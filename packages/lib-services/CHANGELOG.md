@@ -1,5 +1,15 @@
 # @x3m-industries/lib-services
 
+## 2.2.0
+
+### Minor Changes
+
+- fcc0216: **DX Improvements**: Implemented zero-boilerplate configuration pattern.
+  - Added `InferServiceFromConfig` and `InferGlobalServiceFromConfig` helpers.
+  - Added `InferServiceType` and `InferGlobalServiceType` helpers.
+  - Removed the need for module augmentation or manual type declarations.
+  - Updated `CollectionConfig` and `GlobalConfig` types to support `satisfies` pattern with full type inference.
+
 ## 2.1.2
 
 ### Patch Changes
