@@ -116,9 +116,18 @@ export { getPayloadWithServices } from './get-payload-with-services.js';
 export { createServicesProxy } from './services-proxy.js';
 // Re-export types
 export type {
+  CollectionConfig,
   CollectionServiceConfig,
+  DefaultCollectionService,
+  DefaultGlobalService,
+  GlobalConfig,
   GlobalServiceConfig,
+  InferGlobalServiceFromConfig,
+  InferGlobalServiceType,
+  InferServiceFromConfig,
+  InferServiceType,
   PayloadWithServices,
+  ServiceRegistry,
   ServicesMap,
   ServicesProxy,
 } from './types.js';

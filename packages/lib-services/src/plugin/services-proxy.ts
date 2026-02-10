@@ -8,14 +8,14 @@
  * // Function call
  * payload.services('orders').findMany()
  */
-export function createServicesProxy<TServices extends Record<string, object>>(
+export function createServicesProxy<TServices extends object>(
   servicesMap: TServices
 ): { (slug: keyof TServices): TServices[keyof TServices] } & TServices {
   const handler: ProxyHandler<(slug: keyof TServices) => TServices[keyof TServices]> = {
     // Handle: payload.services.orders
     get(_target, prop) {
       if (typeof prop === 'string' && prop in servicesMap) {
-        return servicesMap[prop];
+        return (servicesMap as any)[prop];
       }
       return undefined;
     },

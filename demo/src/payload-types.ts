@@ -91,7 +91,9 @@ export interface Config {
     defaultIDType: string;
   };
   fallbackLocale: null;
-  globals: {};
+  globals: {
+    settings: Settings;
+  };
   globalsSelect: {};
   locale: null;
   user: User & {
@@ -477,6 +479,13 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Auth {
   [k: string]: unknown;
+}
+
+export interface Settings {
+  id: string;
+  theme?: ('light' | 'dark') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
 }
 
 

@@ -10,6 +10,7 @@ import { servicesPlugin } from '@x3m-industries/lib-services';
 
 import { AllFields } from './collections/AllFields';
 import { Todos } from './collections/Todos';
+import { Settings } from './globals/Settings';
 import { seed } from './seed';
 
 const filename = fileURLToPath(import.meta.url);
@@ -38,6 +39,7 @@ export default buildConfig({
       },
     },
   ],
+  globals: [Settings],
   plugins: [servicesPlugin()],
   db: mongooseAdapter({
     url: process.env.DATABASE_URL || 'mongodb://localhost:27017/x3m-demo',

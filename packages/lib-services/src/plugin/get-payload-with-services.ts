@@ -1,7 +1,7 @@
 import type { SanitizedConfig } from 'payload';
 import { getPayload } from 'payload';
 
-import type { PayloadWithServices, ServicesMap } from './types.js';
+import type { PayloadWithServices, ServiceRegistry, ServicesMap } from './types.js';
 
 /**
  * Type-safe wrapper around `getPayload()` that includes the `.services` property.
@@ -14,7 +14,7 @@ import type { PayloadWithServices, ServicesMap } from './types.js';
  * await payload.services.orders.findMany();
  */
 export async function getPayloadWithServices<
-  TServices extends Record<string, object> = ServicesMap,
+  TServices extends object = keyof ServiceRegistry extends never ? ServicesMap : ServiceRegistry,
 >(config: Promise<SanitizedConfig> | SanitizedConfig): Promise<PayloadWithServices<TServices>> {
   const payload = (await getPayload({ config })) as PayloadWithServices<TServices>;
   return payload;

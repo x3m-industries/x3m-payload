@@ -1,15 +1,11 @@
 import { Suspense } from 'react';
 
-import configPromise from '@payload-config';
-
-import { getPayloadWithServices } from '@x3m-industries/lib-services';
-
-import type { TodosService } from '../../collections/Todos';
 import { AddTodoForm } from '../../components/AddTodoForm';
 import { TodoItem } from '../../components/TodoItem';
+import { getPayload } from '../../services';
 
 async function TodosContent() {
-  const payload = await getPayloadWithServices<{ todos: TodosService }>(configPromise);
+  const payload = await getPayload();
   const todos = await payload.services.todos.findMany({ limit: 100 });
 
   return (

@@ -64,8 +64,8 @@ export default buildConfig({
 
 ```typescript
 // collections/Orders.ts
-export const Orders: CollectionConfig = {
-  slug: 'orders',
+export const Orders = {
+  slug: 'orders' as const,
   fields: [...],
   service: {
     extensions: ({ getPayload, collection }) => ({
@@ -76,22 +76,24 @@ export const Orders: CollectionConfig = {
     }),
     cache: { findMany: { life: 'hours', tags: ['orders'] } }, // "use cache"
   },
-};
+} satisfies CollectionConfig;
 ```
 
 ```typescript
 // collections/Customers.ts
 // Just standard CRUD? No problem.
-export const Customers: CollectionConfig = {
-  slug: 'customers',
+export const Customers = {
+  slug: 'customers' as const,
   fields: [...],
   service: true, // Auto-enable default CRUD service
-};
+} satisfies CollectionConfig;
 ```
 
 ```typescript
 // Anywhere in your app
-const payload = await getPayloadWithServices(config);
+import { getPayload } from './services'; // Centralized definition
+
+const payload = await getPayload();
 
 // Default CRUD — fully typed
 await payload.services.orders.findMany({ where: { status: { equals: 'pending' } } });

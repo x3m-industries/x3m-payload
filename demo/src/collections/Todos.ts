@@ -1,6 +1,6 @@
-import type { CollectionConfig, Payload } from 'payload';
+import type { Payload } from 'payload';
 
-import type { DefaultCollectionService } from '@x3m-industries/lib-services';
+import type { CollectionConfig } from '@x3m-industries/lib-services';
 
 import type { Todo } from '../payload-types';
 
@@ -22,11 +22,8 @@ export const todosExtensions = ({
   },
 });
 
-/** Full service type for todos - use with getPayloadWithServices<{ todos: TodosService }>() */
-export type TodosService = DefaultCollectionService<'todos'> & ReturnType<typeof todosExtensions>;
-
-export const Todos: CollectionConfig = {
-  slug: 'todos',
+export const Todos = {
+  slug: 'todos' as const,
   admin: {
     useAsTitle: 'title',
   },
@@ -46,4 +43,4 @@ export const Todos: CollectionConfig = {
     cache: { findMany: { life: 'seconds', tags: ['todos'] } },
     extensions: todosExtensions,
   },
-} as unknown as CollectionConfig;
+} satisfies CollectionConfig;
