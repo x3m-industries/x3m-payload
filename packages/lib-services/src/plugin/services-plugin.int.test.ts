@@ -100,10 +100,12 @@ describe('servicesPlugin (Integration)', () => {
 
   beforeEach(async () => {
     // Clean up tasks between tests
-    const existing = await payload.find({ collection: 'tasks', limit: 1000 });
-    for (const doc of existing.docs) {
-      await payload.delete({ id: doc.id, collection: 'tasks' });
-    }
+    await payload.delete({
+      collection: 'tasks',
+      where: {
+        id: { exists: true },
+      },
+    });
     // Reset globals
     await payload.updateGlobal({
       slug: 'site-settings',
