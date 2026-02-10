@@ -118,16 +118,16 @@ declare module 'payload' {
  *   }
  * }
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+
 export interface ServiceRegistry {}
 
 /**
  * Extended CollectionConfig that supports the `service` property.
  * Use this instead of Payload's CollectionConfig when defining collections with services.
  */
-export type CollectionConfig = PayloadCollectionConfig & {
+export type CollectionConfig = {
   service?: boolean | CollectionServiceConfig;
-};
+} & PayloadCollectionConfig;
 
 /**
  * Helper to infer the full service type for a collection.
@@ -149,7 +149,7 @@ export type InferServiceType<
  * const Todos = { slug: 'todos', ... } satisfies CollectionConfig;
  * type TodosService = InferServiceFromConfig<typeof Todos>;
  */
-export type InferServiceFromConfig<T extends { slug: CollectionSlug; service?: any }> =
+export type InferServiceFromConfig<T extends { service?: any; slug: CollectionSlug }> =
   InferServiceType<
     T['slug'],
     T['service'] extends { extensions: infer E }
@@ -163,9 +163,9 @@ export type InferServiceFromConfig<T extends { slug: CollectionSlug; service?: a
  * Extended GlobalConfig that supports the `service` property.
  * Use this instead of Payload's GlobalConfig when defining globals with services.
  */
-export type GlobalConfig = PayloadGlobalConfig & {
+export type GlobalConfig = {
   service?: boolean | GlobalServiceConfig;
-};
+} & PayloadGlobalConfig;
 
 /**
  * Helper to infer the full service type for a global.
@@ -187,7 +187,7 @@ export type InferGlobalServiceType<
  * const Settings = { slug: 'settings', ... } satisfies GlobalConfig;
  * type SettingsService = InferGlobalServiceFromConfig<typeof Settings>;
  */
-export type InferGlobalServiceFromConfig<T extends { slug: GlobalSlug; service?: any }> =
+export type InferGlobalServiceFromConfig<T extends { service?: any; slug: GlobalSlug }> =
   InferGlobalServiceType<
     T['slug'],
     T['service'] extends { extensions: infer E }
